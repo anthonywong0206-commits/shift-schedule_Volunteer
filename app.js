@@ -1,6 +1,3 @@
-const DAY_START = 8 * 60;
-const DAY_END = 18 * 60;
-const DAY_DURATION = DAY_END - DAY_START;
 const STEP = 15;
 const GROUP_HEIGHT = 34;
 const ROW_HEIGHT = 58;
@@ -12,456 +9,312 @@ const COLORS = ['#2f80ed','#32a875','#f59e42','#8a63d2','#e05263','#23a7b5'];
 
 const seed = {
   volunteers: [
-    {id:'v1',name:'陳小明',center:'社區中心A',group:'青年組',phone:'9123 4567',email:'chan@example.com',availabilityStart:480,availabilityEnd:1080},
-    {id:'v2',name:'張家豪',center:'社區中心A',group:'關懷組',phone:'9345 8821',email:'cheung@example.com',availabilityStart:540,availabilityEnd:1020},
-    {id:'v3',name:'李美玲',center:'社區中心B',group:'活動組',phone:'9663 1128',email:'lee@example.com',availabilityStart:600,availabilityEnd:1080},
-    {id:'v4',name:'黃詠思',center:'社區中心B',group:'青年組',phone:'9882 3321',email:'wong@example.com',availabilityStart:540,availabilityEnd:1020},
-    {id:'v5',name:'林啟明',center:'社區中心C',group:'物資組',phone:'9200 8452',email:'lam@example.com',availabilityStart:480,availabilityEnd:1080},
-    {id:'v6',name:'梁麗欣',center:'社區中心C',group:'關懷組',phone:'6011 2200',email:'leung@example.com',availabilityStart:480,availabilityEnd:900},
-    {id:'v7',name:'許文彬',center:'社區中心A',group:'活動組',phone:'6112 3300',email:'hui@example.com',availabilityStart:720,availabilityEnd:1080},
-    {id:'v8',name:'鄭志強',center:'社區中心B',group:'物資組',phone:'6223 4400',email:'cheng@example.com',availabilityStart:780,availabilityEnd:1080}
+    {id:'v1',name:'陳小明',center:'東華三院',group:'青年組',phone:'9123 4567',email:'chan@example.com',availabilityStart:480,availabilityEnd:1080},
+    {id:'v2',name:'張家豪',center:'聖公會聖匠堂長者地區中心',group:'關懷組',phone:'9345 8821',email:'cheung@example.com',availabilityStart:540,availabilityEnd:1020},
+    {id:'v3',name:'李美玲',center:'善導會龍澄坊',group:'活動組',phone:'9663 1128',email:'lee@example.com',availabilityStart:600,availabilityEnd:1080},
+    {id:'v4',name:'黃詠思',center:'香港聖公會樂民郭鳳軒綜合服務中心',group:'青年組',phone:'9882 3321',email:'wong@example.com',availabilityStart:540,availabilityEnd:1020},
+    {id:'v5',name:'林啟明',center:'東華三院',group:'物資組',phone:'9200 8452',email:'lam@example.com',availabilityStart:480,availabilityEnd:1080},
+    {id:'v6',name:'梁麗欣',center:'聖公會聖匠堂長者地區中心',group:'關懷組',phone:'6011 2200',email:'leung@example.com',availabilityStart:480,availabilityEnd:900},
+    {id:'v7',name:'許文彬',center:'善導會龍澄坊',group:'活動組',phone:'6112 3300',email:'hui@example.com',availabilityStart:720,availabilityEnd:1080},
+    {id:'v8',name:'鄭志強',center:'香港聖公會樂民郭鳳軒綜合服務中心',group:'物資組',phone:'6223 4400',email:'cheng@example.com',availabilityStart:780,availabilityEnd:1080}
   ],
-  groups: [
-    {id:'g1',name:'A組－接待及登記組',color:'#32a875'},
-    {id:'g2',name:'B組－活動及場地組',color:'#2f80ed'},
-    {id:'g3',name:'C組－物資及支援組',color:'#f59e42'},
-    {id:'g4',name:'D組－清潔組',color:'#8a63d2'}
+  events: [
+    {
+      id:'e1',name:'接得住的社區－義工服務日',date:'2026-09-12',start:480,end:1080,
+      groups:[
+        {id:'g1',name:'A組－接待及登記組',color:'#32a875'},
+        {id:'g2',name:'B組－活動及場地組',color:'#2f80ed'},
+        {id:'g3',name:'C組－物資及支援組',color:'#f59e42'},
+        {id:'g4',name:'D組－清潔組',color:'#8a63d2'}
+      ],
+      positions:[
+        {id:'p1',name:'接待處',required:4,groupId:'g1',color:'#32a875'},
+        {id:'p2',name:'登記處',required:3,groupId:'g1',color:'#55b982'},
+        {id:'p3',name:'活動組',required:6,groupId:'g2',color:'#2f80ed'},
+        {id:'p4',name:'場地組',required:4,groupId:'g2',color:'#4d92ea'},
+        {id:'p5',name:'物資組',required:3,groupId:'g3',color:'#f59e42'},
+        {id:'p6',name:'支援組',required:2,groupId:'g3',color:'#f2a654'},
+        {id:'p7',name:'清潔組',required:4,groupId:'g4',color:'#8a63d2'}
+      ],
+      shifts:[
+        {id:'s1',volunteerId:'v1',positionId:'p1',groupId:'g1',start:480,end:720},
+        {id:'s2',volunteerId:'v3',positionId:'p1',groupId:'g1',start:840,end:1080},
+        {id:'s3',volunteerId:'v2',positionId:'p2',groupId:'g1',start:540,end:690},
+        {id:'s4',volunteerId:'v4',positionId:'p2',groupId:'g1',start:840,end:1050},
+        {id:'s5',volunteerId:'v5',positionId:'p3',groupId:'g2',start:480,end:720},
+        {id:'s6',volunteerId:'v6',positionId:'p4',groupId:'g2',start:585,end:705},
+        {id:'s7',volunteerId:'v8',positionId:'p3',groupId:'g2',start:840,end:1050},
+        {id:'s8',volunteerId:'v5',positionId:'p5',groupId:'g3',start:495,end:720},
+        {id:'s9',volunteerId:'v7',positionId:'p6',groupId:'g3',start:600,end:720},
+        {id:'s10',volunteerId:'v8',positionId:'p5',groupId:'g3',start:840,end:1080},
+        {id:'s11',volunteerId:'v6',positionId:'p7',groupId:'g4',start:480,end:720},
+        {id:'s12',volunteerId:'v7',positionId:'p7',groupId:'g4',start:840,end:1050}
+      ],
+      lunch:{enabled:true,mode:'uniform',start:750,end:810,individual:{}}
+    }
   ],
-  positions: [
-    {id:'p1',name:'接待處',required:4,groupId:'g1',color:'#32a875'},
-    {id:'p2',name:'登記處',required:3,groupId:'g1',color:'#55b982'},
-    {id:'p3',name:'活動組',required:6,groupId:'g2',color:'#2f80ed'},
-    {id:'p4',name:'場地組',required:4,groupId:'g2',color:'#4d92ea'},
-    {id:'p5',name:'物資組',required:3,groupId:'g3',color:'#f59e42'},
-    {id:'p6',name:'支援組',required:2,groupId:'g3',color:'#f2a654'},
-    {id:'p7',name:'清潔組',required:4,groupId:'g4',color:'#8a63d2'}
-  ],
-  shifts: [
-    {id:'s1',volunteerId:'v1',positionId:'p1',groupId:'g1',start:480,end:720},
-    {id:'s2',volunteerId:'v3',positionId:'p1',groupId:'g1',start:840,end:1080},
-    {id:'s3',volunteerId:'v2',positionId:'p2',groupId:'g1',start:540,end:690},
-    {id:'s4',volunteerId:'v4',positionId:'p2',groupId:'g1',start:840,end:1050},
-    {id:'s5',volunteerId:'v5',positionId:'p3',groupId:'g2',start:480,end:720},
-    {id:'s6',volunteerId:'v6',positionId:'p4',groupId:'g2',start:585,end:705},
-    {id:'s7',volunteerId:'v8',positionId:'p3',groupId:'g2',start:840,end:1050},
-    {id:'s8',volunteerId:'v5',positionId:'p5',groupId:'g3',start:495,end:720},
-    {id:'s9',volunteerId:'v7',positionId:'p6',groupId:'g3',start:600,end:720},
-    {id:'s10',volunteerId:'v8',positionId:'p5',groupId:'g3',start:840,end:1080},
-    {id:'s11',volunteerId:'v6',positionId:'p7',groupId:'g4',start:480,end:720},
-    {id:'s12',volunteerId:'v7',positionId:'p7',groupId:'g4',start:840,end:1050}
-  ],
-  lunch:{enabled:true,mode:'uniform',start:750,end:810,individual:{}}
+  activeEventId:'e1'
 };
 
 let state = normalizeState(loadState());
-let view = 'schedule';
-let eventDate = '2026-09-12';
-let selectedShiftId = state.shifts[0]?.id || '';
+let view = 'events';
+let selectedShiftId = currentEvent()?.shifts?.[0]?.id || '';
 let volunteerSearch = '';
 let statsMode = 'volunteer';
 let statsSelection = '';
 let activeGroupFilter = 'all';
-
 const app = document.getElementById('app');
 
 function clone(v){ return JSON.parse(JSON.stringify(v)); }
-function loadState(){
-  try{ const raw=localStorage.getItem(STORAGE_KEY); return raw ? {...clone(seed),...JSON.parse(raw)} : clone(seed); }
-  catch{ return clone(seed); }
-}
-function normalizeState(data){
-  const next=data||clone(seed);
-  next.lunch={enabled:true,mode:'uniform',start:750,end:810,individual:{},...(next.lunch||{})};
-  if(!next.lunch.mode)next.lunch.mode='uniform';
-  if(!next.lunch.individual||typeof next.lunch.individual!=='object')next.lunch.individual={};
-  return next;
-}
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function id(prefix){ return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`; }
 function clamp(n,min,max){ return Math.min(Math.max(n,min),max); }
 function snap(n){ return Math.round(n/STEP)*STEP; }
 function formatTime(min){ const h=Math.floor(min/60),m=min%60; return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; }
+function inputTime(v){ const [h,m]=String(v||'00:00').split(':').map(Number); return h*60+m; }
 function parseTime(v,fallback){
-  if(typeof v==='number' && Number.isFinite(v)){ if(v>0&&v<1)return Math.round(v*24*60); if(v>=0&&v<=24)return Math.round(v*60); return Math.round(v); }
-  const s=String(v??'').trim(); if(!s)return fallback;
-  const m=s.match(/^(\d{1,2})[:：](\d{1,2})$/); if(m)return Number(m[1])*60+Number(m[2]);
-  const n=Number(s); return Number.isNaN(n)?fallback:(n<=24?n*60:n);
+  if(typeof v==='number'&&Number.isFinite(v)){if(v>0&&v<1)return Math.round(v*24*60);if(v>=0&&v<=24)return Math.round(v*60);return Math.round(v);}
+  const s=String(v??'').trim();if(!s)return fallback;const m=s.match(/^(\d{1,2})[:：](\d{1,2})$/);if(m)return Number(m[1])*60+Number(m[2]);const n=Number(s);return Number.isNaN(n)?fallback:(n<=24?n*60:n);
 }
-function inputTime(v){ const [h,m]=v.split(':').map(Number); return h*60+m; }
 function hours(s,e){ return Math.max(0,e-s)/60; }
 function esc(v){ return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function xmlEsc(v){ return String(v??'').replace(/[<>&'\"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c])); }
 function csvCell(v){ const s=String(v??''); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; }
-function downloadBlob(blob,filename){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
-function toast(message){
-  document.querySelector('.toast')?.remove();
-  const el=document.createElement('div'); el.className='toast'; el.innerHTML=`<span>✓</span>${esc(message)}`; document.body.appendChild(el); setTimeout(()=>el.remove(),2200);
-}
-function viewTitle(){ return ({dashboard:['總覽','查看義工、崗位及服務時數概況'],schedule:['更表編排','自訂分組、崗位及互動拖拉編更'],volunteers:['義工管理','建立、修改或以 Excel 批量匯入義工資料'],positions:['崗位管理','設定崗位名稱、所需人數及所屬分組'],groups:['分組管理','自訂編更分組及管理團隊結構'],stats:['圖表統計','按義工、中心或組別製作專屬圖表'],settings:['系統設定','午膳顯示及本機資料設定']}[view]); }
+function downloadBlob(blob,filename){ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1200); }
+function toast(message){ document.querySelector('.toast')?.remove();const el=document.createElement('div');el.className='toast';el.innerHTML=`<span>✓</span>${esc(message)}`;document.body.appendChild(el);setTimeout(()=>el.remove(),2200); }
+function dateLabel(date){ try{return new Intl.DateTimeFormat('zh-HK',{year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date(`${date}T00:00:00`));}catch{return date;} }
+function safeFileName(v){ return String(v||'更表').replace(/[\\/:*?"<>|]/g,'_').slice(0,80); }
 
+function loadState(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):clone(seed);}catch{return clone(seed);}
+}
+function normalizeEvent(evt,index=0){
+  const start=Number(evt?.start??480),end=Number(evt?.end??1080);
+  return {
+    id:evt?.id||id(`event${index}`),name:evt?.name||`活動 ${index+1}`,date:evt?.date||'2026-09-12',
+    start:clamp(start,0,1430),end:Math.max(clamp(end,15,1440),clamp(start,0,1430)+15),
+    groups:Array.isArray(evt?.groups)?evt.groups:[],positions:Array.isArray(evt?.positions)?evt.positions:[],shifts:Array.isArray(evt?.shifts)?evt.shifts:[],
+    lunch:{enabled:true,mode:'uniform',start:750,end:810,individual:{},...(evt?.lunch||{})}
+  };
+}
+function normalizeState(data){
+  const next=data&&typeof data==='object'?clone(data):clone(seed);
+  next.volunteers=Array.isArray(next.volunteers)?next.volunteers:clone(seed.volunteers);
+  if(!Array.isArray(next.events)){
+    const migrated={id:'event-migrated',name:'原有活動更表',date:next.eventDate||'2026-09-12',start:480,end:1080,groups:next.groups||[],positions:next.positions||[],shifts:next.shifts||[],lunch:next.lunch||{enabled:true,mode:'uniform',start:750,end:810,individual:{}}};
+    next.events=[normalizeEvent(migrated)];
+  }else next.events=next.events.map(normalizeEvent);
+  if(!next.events.length)next.events=clone(seed.events);
+  if(!next.activeEventId||!next.events.some(e=>e.id===next.activeEventId))next.activeEventId=next.events[0].id;
+  return {volunteers:next.volunteers,events:next.events,activeEventId:next.activeEventId};
+}
+function saveState(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+function currentEvent(){ return state.events.find(e=>e.id===state.activeEventId)||state.events[0]||null; }
+function dayStart(){ return currentEvent()?.start??480; }
+function dayEnd(){ return currentEvent()?.end??1080; }
+function dayDuration(){ return Math.max(15,dayEnd()-dayStart()); }
+function selectEvent(eventId,targetView='schedule'){
+  if(!state.events.some(e=>e.id===eventId))return;
+  state.activeEventId=eventId;activeGroupFilter='all';statsSelection='';selectedShiftId=currentEvent()?.shifts?.[0]?.id||'';saveState();view=targetView;render();
+}
+function eventUsage(evt){ const shifts=evt?.shifts||[];return {volunteers:new Set(shifts.map(s=>s.volunteerId)).size,hours:shifts.reduce((n,s)=>n+hours(s.start,s.end),0)}; }
+function groupUsage(groupId){ const evt=currentEvent();const shifts=(evt?.shifts||[]).filter(s=>s.groupId===groupId);return {volunteers:new Set(shifts.map(s=>s.volunteerId)).size,hours:shifts.reduce((n,s)=>n+hours(s.start,s.end),0)}; }
+
+function viewTitle(){
+  const evt=currentEvent();
+  return ({events:['活動管理','建立活動後再進行分組、崗位及義工編更'],schedule:[evt?.name||'更表編排',evt?`${dateLabel(evt.date)}　${formatTime(evt.start)}–${formatTime(evt.end)}`:''],volunteers:['義工管理','建立、修改或以 Excel 批量匯入義工資料'],stats:['專屬更表','按個人、所屬中心或所屬組別輸出更表'],settings:['系統設定','本機資料及示範資料管理']}[view]||['義工編更系統','']);
+}
+function topActionsHTML(){
+  if(view==='events')return `<button class="secondary-button" id="topImport">⇧ Excel 匯入義工</button><button class="primary-button" id="topAddEvent">＋ 新增活動</button>`;
+  if(view==='schedule')return `<button class="secondary-button" id="backEvents">← 活動列表</button><button class="secondary-button" id="topEditEvent">⚙ 活動設定</button><button class="primary-button" id="topSave">▣ 儲存變更</button>`;
+  if(view==='volunteers')return `<button class="secondary-button" id="topImport">⇧ Excel 匯入</button><button class="primary-button" id="topAddVolunteer">＋ 新增義工</button>`;
+  if(view==='stats')return `<button class="secondary-button" id="backSchedule">← 返回更表</button>`;
+  return `<button class="primary-button" id="topSave">▣ 儲存變更</button>`;
+}
 function render(){
   const [title,subtitle]=viewTitle();
-  app.innerHTML=`<div class="app-shell">
-    ${sidebarHTML()}
-    <main class="main-area">
-      <header class="topbar"><div><h1>${title}</h1><p>${subtitle}</p></div><div class="top-actions">
-        <button class="secondary-button" id="topImport">⇧ Excel 匯入</button>
-        <button class="primary-button" id="topSave">▣ 儲存變更</button>
-      </div></header>
-      ${renderContent()}
-    </main>
-  </div>`;
+  app.innerHTML=`<div class="app-shell">${sidebarHTML()}<main class="main-area"><header class="topbar"><div><h1>${esc(title)}</h1><p>${esc(subtitle)}</p></div><div class="top-actions">${topActionsHTML()}</div></header>${renderContent()}</main></div>`;
   bindBase();
-  if(view==='schedule') bindSchedule();
-  if(view==='volunteers') bindVolunteerPage();
-  if(view==='positions') bindPositionPage();
-  if(view==='groups') bindGroupPage();
-  if(view==='stats') bindStats();
-  if(view==='settings') bindSettings();
+  if(view==='events')bindEventsPage();
+  if(view==='schedule')bindSchedule();
+  if(view==='volunteers')bindVolunteerPage();
+  if(view==='stats')bindStats();
+  if(view==='settings')bindSettings();
 }
-
 function sidebarHTML(){
-  const items=[['dashboard','⌂','總覽'],['schedule','▦','更表編排'],['volunteers','♙','義工管理'],['positions','◇','崗位管理'],['groups','♟','分組管理'],['stats','▥','圖表統計'],['settings','⚙','設定']];
-  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">♥</div><div><strong>義工編更系統</strong><span>Volunteer Roster</span></div></div><nav>${items.map(([key,icon,label])=>`<button class="nav-item ${view===key?'active':''}" data-nav="${key}"><b>${icon}</b><span>${label}</span></button>`).join('')}</nav><div class="sidebar-spacer"></div><div class="sidebar-status">◷ <span>資料自動儲存於此瀏覽器<br>支援 GitHub / Vercel</span></div></aside>`;
+  const items=[['events','▦','活動'],['volunteers','♙','義工管理'],['stats','▥','專屬更表'],['settings','⚙','設定']];
+  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">♥</div><div><strong>義工編更系統</strong><span>Volunteer Roster</span></div></div><nav>${items.map(([key,icon,label])=>`<button class="nav-item ${view===key?'active':''}" data-nav="${key}"><b>${icon}</b><span>${label}</span></button>`).join('')}</nav><div class="sidebar-spacer"></div><div class="sidebar-status">◷ <span>活動、義工及更表儲存於此瀏覽器<br>支援 GitHub / Vercel</span></div></aside>`;
 }
-
-function renderContent(){
-  if(view==='dashboard') return dashboardHTML();
-  if(view==='schedule') return schedulePageHTML();
-  if(view==='volunteers') return volunteerPageHTML();
-  if(view==='positions') return positionPageHTML();
-  if(view==='groups') return groupPageHTML();
-  if(view==='stats') return `<div class="content-page">${statsPanelHTML()}</div>`;
-  return settingsHTML();
-}
-
+function renderContent(){ if(view==='events')return eventsPageHTML();if(view==='schedule')return schedulePageHTML();if(view==='volunteers')return volunteerPageHTML();if(view==='stats')return `<div class="content-page">${statsPanelHTML()}</div>`;return settingsHTML(); }
 function bindBase(){
-  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.nav;render();}));
+  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.nav==='stats'&&!currentEvent())return alert('請先建立活動。');view=b.dataset.nav;render();}));
   document.getElementById('topImport')?.addEventListener('click',openImportModal);
+  document.getElementById('topAddEvent')?.addEventListener('click',()=>openEventModal());
+  document.getElementById('topEditEvent')?.addEventListener('click',()=>openEventModal(currentEvent()));
+  document.getElementById('topAddVolunteer')?.addEventListener('click',()=>openVolunteerModal());
   document.getElementById('topSave')?.addEventListener('click',()=>{saveState();toast('已儲存最新資料');});
-  document.getElementById('goSchedule')?.addEventListener('click',()=>{view='schedule';render();});
-  document.getElementById('goSchedule2')?.addEventListener('click',()=>{view='schedule';render();});
+  document.getElementById('backEvents')?.addEventListener('click',()=>{view='events';render();});
+  document.getElementById('backSchedule')?.addEventListener('click',()=>{view='schedule';render();});
+}
+
+function eventsPageHTML(){
+  const totalHours=state.events.reduce((n,e)=>n+eventUsage(e).hours,0),upcoming=state.events.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  return `<div class="content-page events-page"><div class="overview-grid event-overview"><div class="overview-card"><span>已建立活動</span><strong>${state.events.length}</strong><small>個</small></div><div class="overview-card"><span>義工資料</span><strong>${state.volunteers.length}</strong><small>人</small></div><div class="overview-card"><span>所有活動班次</span><strong>${state.events.reduce((n,e)=>n+e.shifts.length,0)}</strong><small>班</small></div><div class="overview-card"><span>累計服務時數</span><strong>${totalHours.toFixed(1)}</strong><small>小時</small></div></div>
+    <section class="events-section"><div class="events-section-head"><div><h2>已生成的活動</h2><p>點擊「管理更表」進入活動；亦可隨時修改活動資料、分組及崗位。</p></div><button class="primary-button" id="pageAddEvent">＋ 新增活動</button></div>
+      <div class="event-card-grid">${upcoming.map(eventCardHTML).join('')}</div>
+    </section>
+  </div>`;
+}
+function eventCardHTML(evt){
+  const u=eventUsage(evt),positions=evt.positions.length,needed=evt.positions.reduce((n,p)=>n+Number(p.required||0),0);
+  return `<article class="event-card ${evt.id===state.activeEventId?'current':''}" data-event-card="${evt.id}"><div class="event-card-date"><strong>${new Date(`${evt.date}T00:00:00`).getDate()}</strong><span>${new Intl.DateTimeFormat('zh-HK',{month:'short'}).format(new Date(`${evt.date}T00:00:00`))}</span></div><div class="event-card-main"><div class="event-card-title"><div><h3>${esc(evt.name)}</h3><p>${dateLabel(evt.date)}　${formatTime(evt.start)}–${formatTime(evt.end)}</p></div><span class="event-status">${evt.shifts.length?'編更中':'未編更'}</span></div><div class="event-card-metrics"><span><b>${evt.groups.length}</b> 分組</span><span><b>${positions}</b> 崗位</span><span><b>${needed}</b> 需求人次</span><span><b>${u.volunteers}</b> 已編義工</span><span><b>${u.hours.toFixed(1)}</b> 小時</span></div><div class="event-card-actions"><button class="primary-button" data-open-event="${evt.id}">管理更表</button><button class="secondary-button" data-event-stats="${evt.id}">專屬更表</button><button class="secondary-button" data-edit-event="${evt.id}">修改</button><button class="danger-ghost" data-delete-event="${evt.id}">刪除</button></div></div></article>`;
+}
+function bindEventsPage(){
+  document.getElementById('pageAddEvent')?.addEventListener('click',()=>openEventModal());
+  document.querySelectorAll('[data-open-event]').forEach(b=>b.addEventListener('click',()=>selectEvent(b.dataset.openEvent,'schedule')));
+  document.querySelectorAll('[data-event-stats]').forEach(b=>b.addEventListener('click',()=>selectEvent(b.dataset.eventStats,'stats')));
+  document.querySelectorAll('[data-edit-event]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openEventModal(state.events.find(x=>x.id===b.dataset.editEvent));}));
+  document.querySelectorAll('[data-delete-event]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();deleteEvent(b.dataset.deleteEvent);}));
+}
+function deleteEvent(eventId){
+  const evt=state.events.find(e=>e.id===eventId);if(!evt)return;
+  if(!confirm(`確定刪除「${evt.name}」？活動內所有分組、崗位、班次及午膳設定會一併刪除。`))return;
+  state.events=state.events.filter(e=>e.id!==eventId);if(!state.events.length)state.activeEventId='';else if(state.activeEventId===eventId)state.activeEventId=state.events[0].id;saveState();render();toast('活動已刪除');
 }
 
 function allocateLanes(positionId){
-  const shifts=state.shifts.filter(s=>s.positionId===positionId).slice().sort((a,b)=>a.start-b.start||a.end-b.end||a.id.localeCompare(b.id));
-  const laneEnds=[],laneMap={};
-  for(const shift of shifts){
-    let lane=laneEnds.findIndex(end=>end<=shift.start);
-    if(lane<0){lane=laneEnds.length;laneEnds.push(shift.end);}else laneEnds[lane]=shift.end;
-    laneMap[shift.id]=lane;
-  }
+  const evt=currentEvent();const shifts=(evt?.shifts||[]).filter(s=>s.positionId===positionId).slice().sort((a,b)=>a.start-b.start||a.end-b.end||a.id.localeCompare(b.id));const laneEnds=[],laneMap={};
+  for(const shift of shifts){let lane=laneEnds.findIndex(end=>end<=shift.start);if(lane<0){lane=laneEnds.length;laneEnds.push(shift.end);}else laneEnds[lane]=shift.end;laneMap[shift.id]=lane;}
   return {laneMap,laneCount:Math.max(1,laneEnds.length)};
 }
 function buildLayout(){
-  let y=0; const items=[],positionRows=[],laneMap={};
-  const groups=activeGroupFilter==='all'?state.groups:state.groups.filter(g=>g.id===activeGroupFilter);
-  for(const group of groups){
-    items.push({type:'group',id:group.id,y,height:GROUP_HEIGHT,group}); y+=GROUP_HEIGHT;
-    for(const position of state.positions.filter(p=>p.groupId===group.id)){
-      const lanes=allocateLanes(position.id); Object.assign(laneMap,lanes.laneMap);
-      const height=lanes.laneCount>1?ROW_PADDING*2+lanes.laneCount*EVENT_HEIGHT+(lanes.laneCount-1)*LANE_GAP:ROW_HEIGHT;
-      const row={type:'position',id:position.id,y,height,group,position,laneCount:lanes.laneCount}; items.push(row); positionRows.push(row); y+=height;
-    }
-  }
+  const evt=currentEvent();let y=0;const items=[],positionRows=[],laneMap={};if(!evt)return {items,positionRows,laneMap,totalHeight:0};
+  const groups=activeGroupFilter==='all'?evt.groups:evt.groups.filter(g=>g.id===activeGroupFilter);
+  for(const group of groups){items.push({type:'group',id:group.id,y,height:GROUP_HEIGHT,group});y+=GROUP_HEIGHT;for(const position of evt.positions.filter(p=>p.groupId===group.id)){const lanes=allocateLanes(position.id);Object.assign(laneMap,lanes.laneMap);const height=lanes.laneCount>1?ROW_PADDING*2+lanes.laneCount*EVENT_HEIGHT+(lanes.laneCount-1)*LANE_GAP:ROW_HEIGHT;const row={type:'position',id:position.id,y,height,group,position,laneCount:lanes.laneCount};items.push(row);positionRows.push(row);y+=height;}}
   return {items,positionRows,laneMap,totalHeight:y};
 }
-function getVolunteerLunch(volunteerId){
-  if(!state.lunch.enabled)return null;
-  if(state.lunch.mode==='staggered')return state.lunch.individual?.[volunteerId]||null;
-  return {start:state.lunch.start,end:state.lunch.end};
+function getVolunteerLunch(volunteerId){ const lunch=currentEvent()?.lunch;if(!lunch?.enabled)return null;if(lunch.mode==='staggered')return lunch.individual?.[volunteerId]||null;return {start:lunch.start,end:lunch.end}; }
+function timelineMarks(){
+  const start=dayStart(),end=dayEnd(),marks=[start];let next=Math.ceil(start/60)*60;if(next===start)next+=60;for(let t=next;t<end;t+=60)marks.push(t);if(end!==marks.at(-1))marks.push(end);return marks;
 }
-function groupUsage(groupId){
-  const shifts=state.shifts.filter(s=>s.groupId===groupId);
-  return {volunteers:new Set(shifts.map(s=>s.volunteerId)).size,hours:shifts.reduce((sum,s)=>sum+hours(s.start,s.end),0)};
-}
-
 function schedulePageHTML(){
-  const layout=buildLayout();
-  const hoursLabels=Array.from({length:11},(_,i)=>DAY_START+i*60).map((t,i)=>`<div class="hour-label ${i===0?'first':''} ${i===10?'last':''}" style="left:${i*10}%">${formatTime(t)}</div>`).join('');
+  const evt=currentEvent();if(!evt)return `<div class="content-page"><div class="empty-chart">請先建立活動。</div></div>`;
+  const layout=buildLayout(),marks=timelineMarks();
+  const hoursLabels=marks.map((t,i)=>`<div class="hour-label ${i===0?'first':''} ${i===marks.length-1?'last':''}" style="left:${((t-dayStart())/dayDuration())*100}%">${formatTime(t)}</div>`).join('');
   const rowLabels=layout.items.map(item=>item.type==='group'?`<div class="group-label" style="height:${item.height}px"><span class="group-dot" style="background:${item.group.color}"></span>${esc(item.group.name)}</div>`:`<div class="position-label" style="height:${item.height}px"><span>${esc(item.position.name)}</span><small>所需 ${item.position.required} 人</small></div>`).join('');
   const rowBg=layout.items.map(item=>`<div class="${item.type==='group'?'canvas-group-row':'canvas-position-row'}" style="top:${item.y}px;height:${item.height}px"></div>`).join('');
-  const verticals=Array.from({length:11},(_,i)=>`<div class="vertical-grid" style="left:${i*10}%"></div>`).join('');
-  const lunch=state.lunch.enabled&&state.lunch.mode!=='staggered'?`<div class="lunch-zone" style="left:${((state.lunch.start-DAY_START)/DAY_DURATION)*100}%;width:${((state.lunch.end-state.lunch.start)/DAY_DURATION)*100}%"><div class="lunch-tag">🍴 午膳時間</div></div>`:'';
-  const visibleShifts=state.shifts.filter(s=>activeGroupFilter==='all'||s.groupId===activeGroupFilter);
-  const shifts=visibleShifts.map(shift=>shiftBlockHTML(shift,layout)).join('');
-  const selected=state.shifts.find(s=>s.id===selectedShiftId),vol=state.volunteers.find(v=>v.id===selected?.volunteerId),pos=state.positions.find(p=>p.id===selected?.positionId);
-  const selectedLunch=vol?getVolunteerLunch(vol.id):null;
-  const personalLunchEntries=Object.entries(state.lunch.individual||{}).map(([vid,l])=>({vol:state.volunteers.find(v=>v.id===vid),l})).filter(x=>x.vol);
-
-  return `<div class="schedule-page">
-    <div class="feature-strip">
-      <div><span class="feature-icon blue">▤</span><p><strong>自訂崗位</strong><small>設定崗位名稱及所需人數</small></p></div>
-      <div><span class="feature-icon cyan">♟</span><p><strong>分組功能</strong><small>自訂分組編更及管理團隊</small></p></div>
-      <div><span class="feature-icon indigo">↔</span><p><strong>互動編更</strong><small>拖拉、伸縮及跨組別調動</small></p></div>
-      <div><span class="feature-icon pink">🍴</span><p><strong>午膳時間</strong><small>統一或按義工分段安排</small></p></div>
-      <div><span class="feature-icon blue">▥</span><p><strong>多義工同時段</strong><small>重疊班次自動擴闊欄目</small></p></div>
-      <div><span class="feature-icon cyan">◷</span><p><strong>時數統計</strong><small>自動統計各組人數及時數</small></p></div>
-    </div>
-    <div class="schedule-toolbar"><div class="date-controls"><button class="icon-button" id="prevDate">‹</button><input id="eventDate" type="date" value="${eventDate}"><button class="icon-button" id="nextDate">›</button></div><div class="toolbar-spacer"></div><button class="secondary-button" id="addShift">＋ 新增編更</button><button class="secondary-button" id="exportSchedule">⇩ 匯出 Excel CSV</button><button class="publish-button" id="publishSchedule">✓ 發布更表</button></div>
-    <div class="group-filter-bar"><span class="filter-label">顯示分組</span><button class="group-filter-button ${activeGroupFilter==='all'?'active':''}" data-filter-group="all">全部</button>${state.groups.map(g=>`<button class="group-filter-button ${activeGroupFilter===g.id?'active':''}" data-filter-group="${g.id}"><span class="group-dot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}</div>
-    <section class="group-usage-section"><div class="group-usage-heading"><strong>各組編更概況</strong><small>義工總人數按已編配至該編更組別的獨立義工計算</small></div><div class="group-usage-grid">${state.groups.map(g=>{const u=groupUsage(g.id);return `<button class="group-usage-card ${activeGroupFilter===g.id?'active':''}" data-summary-group="${g.id}"><span class="group-dot large" style="background:${g.color}"></span><span class="group-usage-name">${esc(g.name)}</span><span class="group-usage-metric"><b>${u.volunteers}</b> 人</span><span class="group-usage-metric"><b>${u.hours.toFixed(1)}</b> 小時</span></button>`}).join('')}</div></section>
-    <div class="schedule-workspace">
-      <div class="left-rail">
-        <div class="rail-section"><div class="rail-title"><strong>崗位列表</strong><button id="railAddPosition">＋ 新增</button></div>${state.positions.map(p=>`<button class="mini-row" data-edit-position="${p.id}"><span class="group-dot" style="background:${p.color}"></span><span>${esc(p.name)}</span><small>${p.required} 人</small></button>`).join('')}</div>
-        <div class="rail-section"><div class="rail-title"><strong>分組管理</strong><button id="railAddGroup">＋ 新增</button></div>${state.groups.map(g=>`<button class="mini-row" data-edit-group="${g.id}"><span class="group-dot" style="background:${g.color}"></span><span>${esc(g.name)}</span><small>${state.positions.filter(p=>p.groupId===g.id).length} 崗位</small></button>`).join('')}</div>
-      </div>
-      <div class="board-column"><div class="schedule-shell">
-        <div class="timeline-header"><div class="timeline-corner">時間</div><div class="timeline-hours">${hoursLabels}</div></div>
-        <div class="schedule-body" style="height:${layout.totalHeight}px"><div class="row-labels">${rowLabels}</div><div class="timeline-canvas" id="timelineCanvas" style="height:${layout.totalHeight}px">${verticals}${rowBg}${lunch}${shifts}</div></div>
-        <div class="schedule-hint">同一崗位同一時段可安排多名義工；欄目會自動增高。雙擊空白時段新增編更；拖動班次可轉崗位／分組，左右拉伸可調整時間。</div>
-      </div></div>
-      <aside class="inspector"><h3>義工資訊</h3>${vol&&selected&&pos?`<div class="person-header"><span class="avatar">${esc(vol.name.slice(0,1))}</span><div><strong>${esc(vol.name)}</strong><small>${esc(vol.center)}</small></div></div><dl><dt>所屬組別</dt><dd>${esc(vol.group||'—')}</dd><dt>電話</dt><dd>${esc(vol.phone||'—')}</dd><dt>電郵</dt><dd>${esc(vol.email||'—')}</dd><dt>午膳</dt><dd>${selectedLunch?`${formatTime(selectedLunch.start)}–${formatTime(selectedLunch.end)}`:'未設定'}</dd></dl><hr><h3>已選班次</h3><div class="selected-shift-card"><span class="group-dot" style="background:${pos.color}"></span><div><strong>${esc(pos.name)}</strong><small>${formatTime(selected.start)}–${formatTime(selected.end)}（${hours(selected.start,selected.end).toFixed(1)} 小時）</small></div></div><button class="secondary-button button-wide" id="editSelectedShift">編輯班次</button><button class="danger-button button-wide" id="deleteSelectedShift">⌫ 刪除班次</button>`:`<div class="empty-inspector">選擇更表上的班次查看義工資料。</div>`}</aside>
-    </div>
-    <div class="lunch-settings-inline lunch-config-panel"><label class="switch-label"><input id="lunchEnabled" type="checkbox" ${state.lunch.enabled?'checked':''}> 顯示午膳時間</label><div class="lunch-mode-switch"><button class="${state.lunch.mode!=='staggered'?'active':''}" data-lunch-mode="uniform">統一時段</button><button class="${state.lunch.mode==='staggered'?'active':''}" data-lunch-mode="staggered">分段安排</button></div>${state.lunch.mode==='staggered'?`<button class="secondary-button compact" id="addVolunteerLunch">＋ 新增義工午膳</button><div class="personal-lunch-list">${personalLunchEntries.length?personalLunchEntries.map(({vol,l})=>`<button class="personal-lunch-chip" data-edit-lunch="${vol.id}"><strong>${esc(vol.name)}</strong><span>${formatTime(l.start)}–${formatTime(l.end)}</span></button>`).join(''):'<span class="lunch-empty">尚未設定個別午膳時間</span>'}</div>`:`<label>由 <input id="lunchStart" type="time" value="${formatTime(state.lunch.start)}"></label><label>至 <input id="lunchEnd" type="time" value="${formatTime(state.lunch.end)}"></label>`}</div>
-    ${statsPanelHTML()}
+  const verticals=marks.map(t=>`<div class="vertical-grid" style="left:${((t-dayStart())/dayDuration())*100}%"></div>`).join('');
+  const lunch=evt.lunch.enabled&&evt.lunch.mode!=='staggered'?`<div class="lunch-zone" style="left:${((evt.lunch.start-dayStart())/dayDuration())*100}%;width:${((evt.lunch.end-evt.lunch.start)/dayDuration())*100}%"><div class="lunch-tag">🍴 午膳時間</div></div>`:'';
+  const visibleShifts=evt.shifts.filter(s=>activeGroupFilter==='all'||s.groupId===activeGroupFilter),shifts=visibleShifts.map(s=>shiftBlockHTML(s,layout)).join('');
+  const selected=evt.shifts.find(s=>s.id===selectedShiftId),vol=state.volunteers.find(v=>v.id===selected?.volunteerId),pos=evt.positions.find(p=>p.id===selected?.positionId),selectedLunch=vol?getVolunteerLunch(vol.id):null;
+  const personalLunchEntries=Object.entries(evt.lunch.individual||{}).map(([vid,l])=>({vol:state.volunteers.find(v=>v.id===vid),l})).filter(x=>x.vol);
+  return `<div class="schedule-page"><section class="event-context-bar"><div><span class="event-context-date">${dateLabel(evt.date)}</span><h2>${esc(evt.name)}</h2><p>${formatTime(evt.start)}–${formatTime(evt.end)}　•　${evt.groups.length} 分組　•　${evt.positions.length} 崗位</p></div><button class="secondary-button" id="editEventStructure">⚙ 修改活動／分組／崗位</button></section>
+    <div class="feature-strip"><div><span class="feature-icon blue">▤</span><p><strong>活動制編更</strong><small>每個活動獨立分組及崗位</small></p></div><div><span class="feature-icon cyan">♟</span><p><strong>分組＋崗位</strong><small>先分組，再新增組內崗位</small></p></div><div><span class="feature-icon indigo">↔</span><p><strong>互動編更</strong><small>拖拉、伸縮及跨崗位調動</small></p></div><div><span class="feature-icon pink">🍴</span><p><strong>午膳時間</strong><small>統一或個別分段安排</small></p></div><div><span class="feature-icon blue">▥</span><p><strong>多人同時段</strong><small>重疊班次自動增高欄目</small></p></div><div><span class="feature-icon cyan">◷</span><p><strong>專屬更表</strong><small>個人／中心／組別匯出</small></p></div></div>
+    <div class="schedule-toolbar"><div class="date-display">▣ ${esc(evt.date)}　${formatTime(evt.start)}–${formatTime(evt.end)}</div><div class="toolbar-spacer"></div><button class="secondary-button" id="addShift">＋ 新增編更</button><button class="secondary-button" id="exportSchedule">⇩ 匯出全活動 Excel</button><button class="publish-button" id="openStats">▥ 專屬更表</button></div>
+    <div class="group-filter-bar"><span class="filter-label">顯示分組</span><button class="group-filter-button ${activeGroupFilter==='all'?'active':''}" data-filter-group="all">全部</button>${evt.groups.map(g=>`<button class="group-filter-button ${activeGroupFilter===g.id?'active':''}" data-filter-group="${g.id}"><span class="group-dot" style="background:${g.color}"></span>${esc(g.name)}</button>`).join('')}</div>
+    <section class="group-usage-section"><div class="group-usage-heading"><strong>各組編更概況</strong><small>獨立義工人數及已編配時數</small></div><div class="group-usage-grid">${evt.groups.map(g=>{const u=groupUsage(g.id);return `<button class="group-usage-card ${activeGroupFilter===g.id?'active':''}" data-summary-group="${g.id}"><span class="group-dot large" style="background:${g.color}"></span><span class="group-usage-name">${esc(g.name)}</span><span class="group-usage-metric"><b>${u.volunteers}</b> 人</span><span class="group-usage-metric"><b>${u.hours.toFixed(1)}</b> 小時</span></button>`}).join('')}</div></section>
+    <div class="schedule-workspace"><div class="left-rail"><div class="rail-section structure-rail"><div class="rail-title"><strong>分組及崗位</strong><button id="railAddGroup">＋ 分組</button></div>${evt.groups.map(g=>groupStructureRailHTML(g)).join('')||'<div class="rail-empty">未有分組</div>'}</div></div>
+      <div class="board-column"><div class="schedule-shell"><div class="timeline-header"><div class="timeline-corner">時間</div><div class="timeline-hours">${hoursLabels}</div></div><div class="schedule-body" style="height:${layout.totalHeight}px"><div class="row-labels">${rowLabels}</div><div class="timeline-canvas" id="timelineCanvas" style="height:${layout.totalHeight}px">${verticals}${rowBg}${lunch}${shifts}</div></div><div class="schedule-hint">班次顯示「姓名（所屬中心）」；同一崗位同時段可安排多人。雙擊空白新增編更；拖動可轉崗位，左右拉伸可改時間。</div></div></div>
+      <aside class="inspector"><h3>義工資訊</h3>${vol&&selected&&pos?`<div class="person-header"><span class="avatar">${esc(vol.name.slice(0,1))}</span><div><strong>${esc(vol.name)}</strong><small>${esc(vol.center)}</small></div></div><dl><dt>所屬組別</dt><dd>${esc(vol.group||'—')}</dd><dt>電話</dt><dd>${esc(vol.phone||'—')}</dd><dt>電郵</dt><dd>${esc(vol.email||'—')}</dd><dt>午膳</dt><dd>${selectedLunch?`${formatTime(selectedLunch.start)}–${formatTime(selectedLunch.end)}`:'未設定'}</dd></dl><hr><h3>已選班次</h3><div class="selected-shift-card"><span class="group-dot" style="background:${pos.color}"></span><div><strong>${esc(pos.name)}</strong><small>${formatTime(selected.start)}–${formatTime(selected.end)}（${hours(selected.start,selected.end).toFixed(1)} 小時）</small></div></div><button class="secondary-button button-wide" id="editSelectedShift">編輯班次</button><button class="danger-button button-wide" id="deleteSelectedShift">⌫ 刪除班次</button>`:`<div class="empty-inspector">選擇更表上的班次查看義工資料。</div>`}</aside></div>
+    <div class="lunch-settings-inline lunch-config-panel"><label class="switch-label"><input id="lunchEnabled" type="checkbox" ${evt.lunch.enabled?'checked':''}> 顯示午膳時間</label><div class="lunch-mode-switch"><button class="${evt.lunch.mode!=='staggered'?'active':''}" data-lunch-mode="uniform">統一時段</button><button class="${evt.lunch.mode==='staggered'?'active':''}" data-lunch-mode="staggered">分段安排</button></div>${evt.lunch.mode==='staggered'?`<button class="secondary-button compact" id="addVolunteerLunch">＋ 新增義工午膳</button><div class="personal-lunch-list">${personalLunchEntries.length?personalLunchEntries.map(({vol,l})=>`<button class="personal-lunch-chip" data-edit-lunch="${vol.id}"><strong>${esc(vol.name)}</strong><span>${formatTime(l.start)}–${formatTime(l.end)}</span></button>`).join(''):'<span class="lunch-empty">尚未設定個別午膳時間</span>'}</div>`:`<label>由 <input id="lunchStart" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" value="${formatTime(evt.lunch.start)}"></label><label>至 <input id="lunchEnd" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" value="${formatTime(evt.lunch.end)}"></label>`}</div>
   </div>`;
 }
-
+function groupStructureRailHTML(g){
+  const evt=currentEvent(),positions=evt.positions.filter(p=>p.groupId===g.id);
+  return `<div class="rail-group"><div class="rail-group-head"><span class="group-dot" style="background:${g.color}"></span><strong>${esc(g.name)}</strong><span class="rail-group-spacer"></span><button title="編輯分組" data-edit-group="${g.id}">✎</button><button title="刪除分組" class="danger-text" data-delete-group="${g.id}">×</button></div><div class="rail-position-list">${positions.map(p=>`<div class="rail-position-row"><span>${esc(p.name)}</span><small>${p.required} 人</small><button data-edit-position="${p.id}" title="編輯崗位">✎</button><button data-delete-position="${p.id}" class="danger-text" title="刪除崗位">×</button></div>`).join('')}<button class="rail-add-position" data-add-position-group="${g.id}">＋ 在此組新增崗位</button></div></div>`;
+}
 function shiftBlockHTML(shift,layout){
-  const row=layout.positionRows.find(r=>r.position.id===shift.positionId),vol=state.volunteers.find(v=>v.id===shift.volunteerId),pos=state.positions.find(p=>p.id===shift.positionId);
-  if(!row||!vol||!pos)return '';
-  const left=((shift.start-DAY_START)/DAY_DURATION)*100,width=((shift.end-shift.start)/DAY_DURATION)*100,lane=layout.laneMap[shift.id]||0;
-  const top=row.laneCount>1?row.y+ROW_PADDING+lane*(EVENT_HEIGHT+LANE_GAP):row.y+(row.height-EVENT_HEIGHT)/2;
-  const lunch=getVolunteerLunch(shift.volunteerId),overlap=lunch&&shift.start<lunch.end&&shift.end>lunch.start;
-  let lunchSegment='';
-  if(state.lunch.enabled&&state.lunch.mode==='staggered'&&overlap){
-    const segStart=Math.max(shift.start,lunch.start),segEnd=Math.min(shift.end,lunch.end),segLeft=((segStart-shift.start)/(shift.end-shift.start))*100,segWidth=((segEnd-segStart)/(shift.end-shift.start))*100;
-    lunchSegment=`<span class="shift-lunch-segment" style="left:${segLeft}%;width:${segWidth}%" title="午膳 ${formatTime(lunch.start)}–${formatTime(lunch.end)}"></span>`;
-  }
-  return `<div class="shift-block ${selectedShiftId===shift.id?'selected':''} ${state.lunch.mode!=='staggered'&&overlap?'lunch-overlap':''}" data-shift="${shift.id}" style="left:${left}%;width:${width}%;top:${top}px;background:${pos.color}"><i class="resize-handle left" data-resize="left"></i>${lunchSegment}<strong>${esc(vol.name)}</strong><span class="shift-time">${formatTime(shift.start)}–${formatTime(shift.end)}</span><i class="resize-handle right" data-resize="right"></i></div>`;
+  const evt=currentEvent(),row=layout.positionRows.find(r=>r.position.id===shift.positionId),vol=state.volunteers.find(v=>v.id===shift.volunteerId),pos=evt.positions.find(p=>p.id===shift.positionId);if(!row||!vol||!pos)return '';
+  const left=((shift.start-dayStart())/dayDuration())*100,width=((shift.end-shift.start)/dayDuration())*100,lane=layout.laneMap[shift.id]||0,top=row.laneCount>1?row.y+ROW_PADDING+lane*(EVENT_HEIGHT+LANE_GAP):row.y+(row.height-EVENT_HEIGHT)/2;
+  const lunch=getVolunteerLunch(shift.volunteerId),overlap=lunch&&shift.start<lunch.end&&shift.end>lunch.start;let lunchSegment='';
+  if(evt.lunch.enabled&&evt.lunch.mode==='staggered'&&overlap){const segStart=Math.max(shift.start,lunch.start),segEnd=Math.min(shift.end,lunch.end),segLeft=((segStart-shift.start)/(shift.end-shift.start))*100,segWidth=((segEnd-segStart)/(shift.end-shift.start))*100;lunchSegment=`<span class="shift-lunch-segment" style="left:${segLeft}%;width:${segWidth}%" title="午膳 ${formatTime(lunch.start)}–${formatTime(lunch.end)}"></span>`;}
+  return `<div class="shift-block ${selectedShiftId===shift.id?'selected':''} ${evt.lunch.mode!=='staggered'&&overlap?'lunch-overlap':''}" data-shift="${shift.id}" style="left:${left}%;width:${width}%;top:${top}px;background:${pos.color}"><i class="resize-handle left" data-resize="left"></i>${lunchSegment}<strong title="${esc(vol.name)}（${esc(vol.center)}）">${esc(vol.name)}（${esc(vol.center||'未填中心')}）</strong><span class="shift-time">${formatTime(shift.start)}–${formatTime(shift.end)}</span><i class="resize-handle right" data-resize="right"></i></div>`;
 }
-
 function bindSchedule(){
-  document.getElementById('eventDate')?.addEventListener('change',e=>eventDate=e.target.value);
-  document.getElementById('prevDate')?.addEventListener('click',()=>changeDate(-1));
-  document.getElementById('nextDate')?.addEventListener('click',()=>changeDate(1));
-  document.getElementById('addShift')?.addEventListener('click',()=>openShiftModal());
-  document.getElementById('exportSchedule')?.addEventListener('click',exportScheduleCSV);
-  document.getElementById('publishSchedule')?.addEventListener('click',()=>toast('更表已標記為可發布版本'));
-  document.getElementById('railAddPosition')?.addEventListener('click',()=>openPositionModal());
-  document.getElementById('railAddGroup')?.addEventListener('click',()=>openGroupModal());
-  document.querySelectorAll('[data-edit-position]').forEach(b=>b.addEventListener('click',()=>openPositionModal(state.positions.find(p=>p.id===b.dataset.editPosition))));
-  document.querySelectorAll('[data-edit-group]').forEach(b=>b.addEventListener('click',()=>openGroupModal(state.groups.find(g=>g.id===b.dataset.editGroup))));
-  document.querySelectorAll('[data-filter-group],[data-summary-group]').forEach(b=>b.addEventListener('click',()=>{activeGroupFilter=b.dataset.filterGroup||b.dataset.summaryGroup;const candidate=state.shifts.find(s=>activeGroupFilter==='all'||s.groupId===activeGroupFilter);if(candidate)selectedShiftId=candidate.id;render();}));
-  document.getElementById('editSelectedShift')?.addEventListener('click',()=>openShiftModal(state.shifts.find(s=>s.id===selectedShiftId)));
-  document.getElementById('deleteSelectedShift')?.addEventListener('click',()=>{ if(confirm('確定刪除此班次？')){state.shifts=state.shifts.filter(s=>s.id!==selectedShiftId);selectedShiftId=state.shifts[0]?.id||'';saveState();render();} });
-  document.getElementById('lunchEnabled')?.addEventListener('change',e=>{state.lunch.enabled=e.target.checked;saveState();render();});
-  document.querySelectorAll('[data-lunch-mode]').forEach(b=>b.addEventListener('click',()=>{state.lunch.mode=b.dataset.lunchMode;state.lunch.enabled=true;saveState();render();}));
-  document.getElementById('lunchStart')?.addEventListener('change',e=>{state.lunch.start=inputTime(e.target.value);saveState();render();});
-  document.getElementById('lunchEnd')?.addEventListener('change',e=>{state.lunch.end=inputTime(e.target.value);saveState();render();});
-  document.getElementById('addVolunteerLunch')?.addEventListener('click',()=>openVolunteerLunchModal());
-  document.querySelectorAll('[data-edit-lunch]').forEach(b=>b.addEventListener('click',()=>openVolunteerLunchModal(b.dataset.editLunch)));
-  document.getElementById('timelineCanvas')?.addEventListener('dblclick',timelineDoubleClick);
-  bindShiftInteractions();
-  bindStats();
+  const evt=currentEvent();if(!evt)return;
+  document.getElementById('editEventStructure')?.addEventListener('click',()=>openEventModal(evt));document.getElementById('addShift')?.addEventListener('click',()=>openShiftModal());document.getElementById('exportSchedule')?.addEventListener('click',downloadFullEventExcel);document.getElementById('openStats')?.addEventListener('click',()=>{view='stats';render();});
+  document.getElementById('railAddGroup')?.addEventListener('click',()=>openGroupModal());document.querySelectorAll('[data-add-position-group]').forEach(b=>b.addEventListener('click',()=>openPositionModal(null,b.dataset.addPositionGroup)));document.querySelectorAll('[data-edit-position]').forEach(b=>b.addEventListener('click',()=>openPositionModal(evt.positions.find(p=>p.id===b.dataset.editPosition))));document.querySelectorAll('[data-edit-group]').forEach(b=>b.addEventListener('click',()=>openGroupModal(evt.groups.find(g=>g.id===b.dataset.editGroup))));
+  document.querySelectorAll('[data-delete-position]').forEach(b=>b.addEventListener('click',()=>deletePosition(b.dataset.deletePosition)));document.querySelectorAll('[data-delete-group]').forEach(b=>b.addEventListener('click',()=>deleteGroup(b.dataset.deleteGroup)));
+  document.querySelectorAll('[data-filter-group],[data-summary-group]').forEach(b=>b.addEventListener('click',()=>{activeGroupFilter=b.dataset.filterGroup||b.dataset.summaryGroup;const candidate=evt.shifts.find(s=>activeGroupFilter==='all'||s.groupId===activeGroupFilter);selectedShiftId=candidate?.id||'';render();}));
+  document.getElementById('editSelectedShift')?.addEventListener('click',()=>openShiftModal(evt.shifts.find(s=>s.id===selectedShiftId)));document.getElementById('deleteSelectedShift')?.addEventListener('click',()=>{if(confirm('確定刪除此班次？')){evt.shifts=evt.shifts.filter(s=>s.id!==selectedShiftId);selectedShiftId=evt.shifts[0]?.id||'';saveState();render();}});
+  document.getElementById('lunchEnabled')?.addEventListener('change',e=>{evt.lunch.enabled=e.target.checked;saveState();render();});document.querySelectorAll('[data-lunch-mode]').forEach(b=>b.addEventListener('click',()=>{evt.lunch.mode=b.dataset.lunchMode;evt.lunch.enabled=true;saveState();render();}));document.getElementById('lunchStart')?.addEventListener('change',e=>{evt.lunch.start=inputTime(e.target.value);saveState();render();});document.getElementById('lunchEnd')?.addEventListener('change',e=>{evt.lunch.end=inputTime(e.target.value);saveState();render();});document.getElementById('addVolunteerLunch')?.addEventListener('click',()=>openVolunteerLunchModal());document.querySelectorAll('[data-edit-lunch]').forEach(b=>b.addEventListener('click',()=>openVolunteerLunchModal(b.dataset.editLunch)));
+  document.getElementById('timelineCanvas')?.addEventListener('dblclick',timelineDoubleClick);bindShiftInteractions();
 }
-
-function changeDate(delta){ const d=new Date(`${eventDate}T00:00:00`); d.setDate(d.getDate()+delta); eventDate=d.toISOString().slice(0,10); render(); }
-function timelineDoubleClick(e){
-  if(e.target.closest('.shift-block'))return;
-  const canvas=e.currentTarget,rect=canvas.getBoundingClientRect(),layout=buildLayout(),x=e.clientX-rect.left,y=e.clientY-rect.top;
-  const row=layout.positionRows.find(r=>y>=r.y&&y<r.y+r.height); if(!row)return;
-  const start=clamp(snap(DAY_START+(x/rect.width)*DAY_DURATION),DAY_START,DAY_END-30); openShiftModal(null,row.position.id,start);
-}
-
+function deleteGroup(groupId){ const evt=currentEvent(),g=evt.groups.find(x=>x.id===groupId);if(!g)return;if(!confirm(`刪除「${g.name}」？此分組內的所有崗位及相關班次會一併刪除。`))return;const pids=new Set(evt.positions.filter(p=>p.groupId===groupId).map(p=>p.id));evt.positions=evt.positions.filter(p=>p.groupId!==groupId);evt.shifts=evt.shifts.filter(s=>!pids.has(s.positionId)&&s.groupId!==groupId);evt.groups=evt.groups.filter(x=>x.id!==groupId);if(activeGroupFilter===groupId)activeGroupFilter='all';saveState();render();toast('分組及相關崗位已刪除'); }
+function deletePosition(positionId){ const evt=currentEvent(),p=evt.positions.find(x=>x.id===positionId);if(!p)return;if(!confirm(`刪除崗位「${p.name}」？相關班次會一併刪除。`))return;evt.positions=evt.positions.filter(x=>x.id!==positionId);evt.shifts=evt.shifts.filter(s=>s.positionId!==positionId);saveState();render();toast('崗位及相關班次已刪除'); }
+function timelineDoubleClick(e){ if(e.target.closest('.shift-block'))return;const canvas=e.currentTarget,rect=canvas.getBoundingClientRect(),layout=buildLayout(),x=e.clientX-rect.left,y=e.clientY-rect.top,row=layout.positionRows.find(r=>y>=r.y&&y<r.y+r.height);if(!row)return;const start=clamp(snap(dayStart()+(x/rect.width)*dayDuration()),dayStart(),dayEnd()-30);openShiftModal(null,row.position.id,start); }
 function bindShiftInteractions(){
-  const canvas=document.getElementById('timelineCanvas'); if(!canvas)return;
-  const layout=buildLayout();
-  document.querySelectorAll('.shift-block').forEach(block=>{
-    block.addEventListener('pointerdown',e=>{
-      if(e.button!==0)return; e.preventDefault();
-      const shift=state.shifts.find(s=>s.id===block.dataset.shift); if(!shift)return;
-      selectedShiftId=shift.id; document.querySelectorAll('.shift-block.selected').forEach(x=>x.classList.remove('selected')); block.classList.add('selected');
-      const rect=canvas.getBoundingClientRect(),startX=e.clientX,startY=e.clientY,initialLeft=block.offsetLeft,initialTop=block.offsetTop,initialWidth=block.offsetWidth;
-      const mode=e.target.dataset.resize||'drag'; let moved=false,last={};
-      block.setPointerCapture?.(e.pointerId);
-      const move=ev=>{
-        const dx=ev.clientX-startX,dy=ev.clientY-startY; if(Math.abs(dx)+Math.abs(dy)>2)moved=true;
-        if(mode==='drag'){
-          const duration=shift.end-shift.start; let x=clamp(initialLeft+dx,0,rect.width-initialWidth); let start=clamp(snap(DAY_START+(x/rect.width)*DAY_DURATION),DAY_START,DAY_END-duration); x=((start-DAY_START)/DAY_DURATION)*rect.width;
-          const center=initialTop+dy+EVENT_HEIGHT/2; const row=nearestRow(center,layout.positionRows); if(!row)return;
-          block.style.left=`${x}px`; block.style.top=`${row.y+(row.height-EVENT_HEIGHT)/2}px`; block.querySelector('.shift-time').textContent=`${formatTime(start)}–${formatTime(start+duration)}`; last={start,end:start+duration,row};
-        }else if(mode==='left'){
-          let x=clamp(initialLeft+dx,0,initialLeft+initialWidth-28); let start=clamp(snap(DAY_START+(x/rect.width)*DAY_DURATION),DAY_START,shift.end-30); x=((start-DAY_START)/DAY_DURATION)*rect.width; const endX=((shift.end-DAY_START)/DAY_DURATION)*rect.width;
-          block.style.left=`${x}px`; block.style.width=`${Math.max(28,endX-x)}px`; block.querySelector('.shift-time').textContent=`${formatTime(start)}–${formatTime(shift.end)}`; last={start,end:shift.end};
-        }else{
-          let end=clamp(snap(DAY_START+((initialLeft+initialWidth+dx)/rect.width)*DAY_DURATION),shift.start+30,DAY_END); const endX=((end-DAY_START)/DAY_DURATION)*rect.width;
-          block.style.width=`${Math.max(28,endX-initialLeft)}px`; block.querySelector('.shift-time').textContent=`${formatTime(shift.start)}–${formatTime(end)}`; last={start:shift.start,end};
-        }
-      };
-      const up=()=>{
-        document.removeEventListener('pointermove',move);
-        if(moved&&last.start!==undefined){shift.start=last.start;shift.end=last.end;if(last.row){shift.positionId=last.row.position.id;shift.groupId=last.row.group.id;}saveState();}
-        render();
-      };
-      document.addEventListener('pointermove',move); document.addEventListener('pointerup',up,{once:true});
-    });
-  });
+  const evt=currentEvent(),canvas=document.getElementById('timelineCanvas');if(!evt||!canvas)return;const layout=buildLayout();document.querySelectorAll('.shift-block').forEach(block=>{block.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();const shift=evt.shifts.find(s=>s.id===block.dataset.shift);if(!shift)return;selectedShiftId=shift.id;document.querySelectorAll('.shift-block.selected').forEach(x=>x.classList.remove('selected'));block.classList.add('selected');const rect=canvas.getBoundingClientRect(),startX=e.clientX,startY=e.clientY,initialLeft=block.offsetLeft,initialTop=block.offsetTop,initialWidth=block.offsetWidth,mode=e.target.dataset.resize||'drag';let moved=false,last={};block.setPointerCapture?.(e.pointerId);
+      const move=ev=>{const dx=ev.clientX-startX,dy=ev.clientY-startY;if(Math.abs(dx)+Math.abs(dy)>2)moved=true;if(mode==='drag'){const duration=shift.end-shift.start;let x=clamp(initialLeft+dx,0,rect.width-initialWidth);let start=clamp(snap(dayStart()+(x/rect.width)*dayDuration()),dayStart(),dayEnd()-duration);x=((start-dayStart())/dayDuration())*rect.width;const center=initialTop+dy+EVENT_HEIGHT/2,row=nearestRow(center,layout.positionRows);if(!row)return;block.style.left=`${x}px`;block.style.top=`${row.y+(row.height-EVENT_HEIGHT)/2}px`;block.querySelector('.shift-time').textContent=`${formatTime(start)}–${formatTime(start+duration)}`;last={start,end:start+duration,row};}else if(mode==='left'){let x=clamp(initialLeft+dx,0,initialLeft+initialWidth-28);let start=clamp(snap(dayStart()+(x/rect.width)*dayDuration()),dayStart(),shift.end-30);x=((start-dayStart())/dayDuration())*rect.width;const endX=((shift.end-dayStart())/dayDuration())*rect.width;block.style.left=`${x}px`;block.style.width=`${Math.max(28,endX-x)}px`;block.querySelector('.shift-time').textContent=`${formatTime(start)}–${formatTime(shift.end)}`;last={start,end:shift.end};}else{let end=clamp(snap(dayStart()+((initialLeft+initialWidth+dx)/rect.width)*dayDuration()),shift.start+30,dayEnd());const endX=((end-dayStart())/dayDuration())*rect.width;block.style.width=`${Math.max(28,endX-initialLeft)}px`;block.querySelector('.shift-time').textContent=`${formatTime(shift.start)}–${formatTime(end)}`;last={start:shift.start,end};}};
+      const up=()=>{document.removeEventListener('pointermove',move);if(moved&&last.start!==undefined){shift.start=last.start;shift.end=last.end;if(last.row){shift.positionId=last.row.position.id;shift.groupId=last.row.group.id;}saveState();}render();};document.addEventListener('pointermove',move);document.addEventListener('pointerup',up,{once:true});});});
 }
-function nearestRow(y,rows){ return rows.reduce((best,row)=>Math.abs(y-(row.y+row.height/2))<Math.abs(y-(best.y+best.height/2))?row:best,rows[0]); }
+function nearestRow(y,rows){ if(!rows.length)return null;return rows.reduce((best,row)=>Math.abs(y-(row.y+row.height/2))<Math.abs(y-(best.y+best.height/2))?row:best,rows[0]); }
 
-function statsPanelHTML(){
-  const options=statsOptions(); if(!options.length)return `<section class="stats-panel"><div class="empty-chart">未有義工資料</div></section>`;
-  if(!options.some(o=>o.value===statsSelection))statsSelection=options[0].value;
-  const volunteerIds=statsVolunteerIds(),scoped=state.shifts.filter(s=>volunteerIds.has(s.volunteerId));
-  const total=scoped.reduce((n,s)=>n+hours(s.start,s.end),0);
-  const positionData=state.positions.map((p,i)=>({name:p.name,value:scoped.filter(s=>s.positionId===p.id).reduce((n,s)=>n+hours(s.start,s.end),0),color:COLORS[i%COLORS.length]})).filter(x=>x.value>0);
-  const groupData=state.groups.map((g,i)=>({name:g.name.split('－')[0],value:scoped.filter(s=>s.groupId===g.id).reduce((n,s)=>n+hours(s.start,s.end),0),color:g.color||COLORS[i%COLORS.length]})).filter(x=>x.value>0);
-  const totalPie=positionData.reduce((n,x)=>n+x.value,0); let angle=0; const stops=[]; for(const d of positionData){const start=angle,end=angle+(d.value/(totalPie||1))*100;stops.push(`${d.color} ${start}% ${end}%`);angle=end;} const donut=stops.length?`conic-gradient(${stops.join(',')})`:'#edf2f8';
-  const maxBar=Math.max(1,...groupData.map(x=>x.value));
-  return `<section class="stats-panel printable-area"><div class="stats-head"><div><h2>▥ 專屬圖表</h2><p>完成主更表後，可按義工本人、所屬中心或所屬組別生成專屬統計。</p></div><button class="secondary-button no-print" id="printStats">▣ 列印／儲存 PDF</button></div>
-    <div class="stats-tabs no-print"><button class="tab-button ${statsMode==='volunteer'?'active':''}" data-stats-mode="volunteer">按義工</button><button class="tab-button ${statsMode==='center'?'active':''}" data-stats-mode="center">按中心</button><button class="tab-button ${statsMode==='group'?'active':''}" data-stats-mode="group">按組別</button><select id="statsSelection">${options.map(o=>`<option value="${esc(o.value)}" ${o.value===statsSelection?'selected':''}>${esc(o.label)}</option>`).join('')}</select></div>
-    <div class="stats-grid"><div class="metric-card"><span>總服務時數</span><strong>${total.toFixed(1)}</strong><small>小時</small></div><div class="metric-card"><span>編更班次</span><strong>${scoped.length}</strong><small>班</small></div><div class="metric-card"><span>涉及義工</span><strong>${volunteerIds.size}</strong><small>人</small></div><div class="metric-card"><span>涉及崗位</span><strong>${positionData.length}</strong><small>個</small></div></div>
-    <div class="chart-grid"><div class="chart-card"><h3>崗位時數分佈</h3>${positionData.length?`<div class="donut-wrap"><div class="donut" style="background:${donut}"><div class="donut-center"><div>${totalPie.toFixed(1)}<br>小時</div></div></div><div class="legend">${positionData.map(d=>`<div class="legend-row"><span class="group-dot" style="background:${d.color}"></span><span>${esc(d.name)}</span><b>${d.value.toFixed(1)}h</b></div>`).join('')}</div></div>`:`<div class="empty-chart">暫未有相關編更資料</div>`}</div>
-    <div class="chart-card"><h3>編更分組服務時數</h3>${groupData.length?`<div class="bar-chart">${groupData.map(d=>`<div class="bar-row"><span>${esc(d.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${(d.value/maxBar)*100}%;background:${d.color}"></div></div><b>${d.value.toFixed(1)}h</b></div>`).join('')}</div>`:`<div class="empty-chart">暫未有相關編更資料</div>`}</div></div></section>`;
-}
 function statsOptions(){
-  if(statsMode==='volunteer')return state.volunteers.map(v=>({value:v.id,label:v.name}));
-  const vals=[...new Set(state.volunteers.map(v=>statsMode==='center'?v.center:v.group).filter(Boolean))]; return vals.map(v=>({value:v,label:v}));
+  const evt=currentEvent();if(!evt)return[];const usedIds=[...new Set(evt.shifts.map(s=>s.volunteerId))],usedVols=usedIds.map(id=>state.volunteers.find(v=>v.id===id)).filter(Boolean);
+  if(statsMode==='volunteer')return usedVols.map(v=>({value:v.id,label:`${v.name}（${v.center||'未填中心'}）`}));const vals=[...new Set(usedVols.map(v=>statsMode==='center'?v.center:v.group).filter(Boolean))];return vals.map(v=>({value:v,label:v}));
 }
-function statsVolunteerIds(){ if(statsMode==='volunteer')return new Set([statsSelection]); return new Set(state.volunteers.filter(v=>(statsMode==='center'?v.center:v.group)===statsSelection).map(v=>v.id)); }
-function bindStats(){
-  document.querySelectorAll('[data-stats-mode]').forEach(b=>b.addEventListener('click',()=>{statsMode=b.dataset.statsMode;statsSelection='';render();}));
-  document.getElementById('statsSelection')?.addEventListener('change',e=>{statsSelection=e.target.value;render();});
-  document.getElementById('printStats')?.addEventListener('click',()=>window.print());
+function statsVolunteerIds(){ const evt=currentEvent();if(!evt)return new Set();if(statsMode==='volunteer')return new Set([statsSelection]);return new Set(state.volunteers.filter(v=>(statsMode==='center'?v.center:v.group)===statsSelection).map(v=>v.id)); }
+function statsSelectionLabel(){ if(statsMode!=='volunteer')return statsSelection;const v=state.volunteers.find(x=>x.id===statsSelection);return v?`${v.name}（${v.center||'未填中心'}）`:statsSelection; }
+function statsRows(){
+  const evt=currentEvent(),ids=statsVolunteerIds();if(!evt)return[];return evt.shifts.filter(s=>ids.has(s.volunteerId)).slice().sort((a,b)=>a.start-b.start).map(s=>{const v=state.volunteers.find(x=>x.id===s.volunteerId),p=evt.positions.find(x=>x.id===s.positionId),g=evt.groups.find(x=>x.id===s.groupId);return {date:evt.date,volunteer:v?.name||'',center:v?.center||'',memberGroup:v?.group||'',scheduleGroup:g?.name||'',position:p?.name||'',start:formatTime(s.start),end:formatTime(s.end),hours:hours(s.start,s.end)};});
 }
-
-function dashboardHTML(){
-  const used=new Set(state.shifts.map(s=>s.volunteerId)).size,totalHours=state.shifts.reduce((n,s)=>n+hours(s.start,s.end),0);
-  const cards=[['已編配義工',used,'人'],['總服務時數',totalHours.toFixed(1),'小時'],['編更分組',state.groups.length,'組'],['自訂崗位',state.positions.length,'個']];
-  return `<div class="content-page"><div class="overview-grid">${cards.map(c=>`<div class="overview-card"><span>${c[0]}</span><strong>${c[1]}</strong><small>${c[2]}</small></div>`).join('')}</div><section class="panel dashboard-group-panel"><div class="dashboard-section-head"><div><h2>各組義工及已用時數</h2><p>按主更表目前編配計算每個編更分組的獨立義工人數及班次總時數。</p></div><button class="secondary-button" id="goSchedule">查看主更表</button></div><div class="dashboard-group-grid">${state.groups.map(g=>{const u=groupUsage(g.id);return `<div class="dashboard-group-card"><span class="group-dot large" style="background:${g.color}"></span><div><strong>${esc(g.name)}</strong><small>${state.positions.filter(p=>p.groupId===g.id).length} 個崗位</small></div><div class="dashboard-group-metric"><b>${u.volunteers}</b><span>義工</span></div><div class="dashboard-group-metric"><b>${u.hours.toFixed(1)}</b><span>小時</span></div></div>`}).join('')}</div></section><div class="two-panel"><section class="panel"><h2>編更進度</h2>${state.groups.map(g=>{const need=state.positions.filter(p=>p.groupId===g.id).reduce((n,p)=>n+p.required,0),assigned=state.shifts.filter(s=>s.groupId===g.id).length;return `<div class="progress-row"><div><span class="group-dot" style="background:${g.color}"></span><strong>${esc(g.name)}</strong></div><span>${assigned} 班／需求參考 ${need} 人</span></div>`}).join('')}</section><section class="panel"><h2>快速開始</h2><p>先匯入義工資料，再建立分組及崗位，最後進入主更表以拖拉方式編排。所有變更會儲存在此瀏覽器。</p><button class="primary-button" id="goSchedule2">進入更表編排</button><div class="mini-summary"><span>義工資料：${state.volunteers.length} 人</span><span>編更紀錄：${state.shifts.length} 班</span></div></section></div></div>`;
+function statsPanelHTML(){
+  const evt=currentEvent();if(!evt)return `<section class="stats-panel"><div class="empty-chart">請先建立活動</div></section>`;const options=statsOptions();if(!options.length)return `<section class="stats-panel"><div class="stats-head"><div><h2>▥ 專屬更表</h2><p>${esc(evt.name)}</p></div></div><div class="empty-chart">此活動尚未有已編配班次。</div></section>`;if(!options.some(o=>o.value===statsSelection))statsSelection=options[0].value;const rows=statsRows(),total=rows.reduce((n,r)=>n+r.hours,0),people=new Set(rows.map(r=>r.volunteer)).size;
+  const modeLabel=statsMode==='volunteer'?'個人':statsMode==='center'?'所屬中心':'所屬組別',selectionLabel=statsSelectionLabel();
+  return `<section class="stats-panel printable-area"><div class="stats-head"><div><h2>▥ ${modeLabel}專屬更表</h2><p>${esc(evt.name)}｜${dateLabel(evt.date)}｜${formatTime(evt.start)}–${formatTime(evt.end)}</p></div><div class="stats-export-actions no-print"><button class="secondary-button" id="downloadStatsExcel">⇩ Excel</button><button class="primary-button" id="downloadStatsPdf">⇩ PDF</button></div></div><div class="stats-tabs no-print"><button class="tab-button ${statsMode==='volunteer'?'active':''}" data-stats-mode="volunteer">個人</button><button class="tab-button ${statsMode==='center'?'active':''}" data-stats-mode="center">所屬中心</button><button class="tab-button ${statsMode==='group'?'active':''}" data-stats-mode="group">所屬組別</button><select id="statsSelection">${options.map(o=>`<option value="${esc(o.value)}" ${o.value===statsSelection?'selected':''}>${esc(o.label)}</option>`).join('')}</select></div>
+    <div class="stats-grid"><div class="metric-card"><span>服務時數</span><strong>${total.toFixed(1)}</strong><small>小時</small></div><div class="metric-card"><span>班次</span><strong>${rows.length}</strong><small>班</small></div><div class="metric-card"><span>義工</span><strong>${people}</strong><small>人</small></div><div class="metric-card"><span>選擇範圍</span><strong class="metric-text">${esc(selectionLabel)}</strong><small>${modeLabel}</small></div></div>
+    <div class="roster-export-card"><div class="roster-export-head"><strong>${esc(selectionLabel)}</strong><span>${rows.length} 班｜${total.toFixed(1)} 小時</span></div><div class="table-wrap"><table class="roster-table"><thead><tr><th>日期</th><th>義工（中心）</th><th>所屬組別</th><th>編更分組</th><th>崗位</th><th>時間</th><th>時數</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.date)}</td><td><strong>${esc(r.volunteer)}（${esc(r.center||'未填中心')}）</strong></td><td>${esc(r.memberGroup||'—')}</td><td>${esc(r.scheduleGroup)}</td><td>${esc(r.position)}</td><td>${r.start}–${r.end}</td><td>${r.hours.toFixed(1)}</td></tr>`).join('')}</tbody></table></div></div></section>`;
 }
-
-function volunteerPageHTML(){
-  const list=state.volunteers.filter(v=>`${v.name} ${v.center} ${v.group}`.toLowerCase().includes(volunteerSearch.toLowerCase()));
-  return `<div class="content-page"><div class="page-actions"><div class="search-box">⌕<input id="volSearch" value="${esc(volunteerSearch)}" placeholder="搜尋 ${state.volunteers.length} 位義工"></div><button class="secondary-button" id="pageImport">▤ Excel 匯入</button><button class="primary-button" id="addVolunteer">＋ 新增義工</button></div><div class="table-wrap"><table><thead><tr><th>姓名</th><th>所屬中心</th><th>所屬組別</th><th>可服務時間</th><th>電話</th><th>電郵</th><th></th></tr></thead><tbody>${list.map(v=>`<tr><td><strong>${esc(v.name)}</strong></td><td>${esc(v.center||'—')}</td><td>${esc(v.group||'—')}</td><td>${formatTime(v.availabilityStart??DAY_START)}–${formatTime(v.availabilityEnd??DAY_END)}</td><td>${esc(v.phone||'—')}</td><td>${esc(v.email||'—')}</td><td class="table-actions"><button data-edit-volunteer="${v.id}">編輯</button><button class="danger-text" data-delete-volunteer="${v.id}">刪除</button></td></tr>`).join('')}</tbody></table></div></div>`;
+function bindStats(){ document.querySelectorAll('[data-stats-mode]').forEach(b=>b.addEventListener('click',()=>{statsMode=b.dataset.statsMode;statsSelection='';render();}));document.getElementById('statsSelection')?.addEventListener('change',e=>{statsSelection=e.target.value;render();});document.getElementById('downloadStatsExcel')?.addEventListener('click',downloadStatsExcel);document.getElementById('downloadStatsPdf')?.addEventListener('click',downloadStatsPDF); }
+function spreadsheetXml(rows,title){
+  const headers=['日期','義工姓名','所屬中心','所屬組別','編更分組','崗位','開始時間','結束時間','服務時數'];const all=[headers,...rows.map(r=>[r.date,r.volunteer,r.center,r.memberGroup,r.scheduleGroup,r.position,r.start,r.end,r.hours.toFixed(2)])];
+  return `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Title>${xmlEsc(title)}</Title></DocumentProperties><Styles><Style ss:ID="Header"><Font ss:Bold="1"/><Interior ss:Color="#DDEBFF" ss:Pattern="Solid"/></Style><Style ss:ID="Hours"><NumberFormat ss:Format="0.00"/></Style></Styles><Worksheet ss:Name="更表"><Table>${all.map((row,ri)=>`<Row>${row.map((cell,ci)=>`<Cell${ri===0?' ss:StyleID="Header"':''}${ri>0&&ci===8?' ss:StyleID="Hours"':''}><Data ss:Type="${ri>0&&ci===8?'Number':'String'}">${xmlEsc(cell)}</Data></Cell>`).join('')}</Row>`).join('')}</Table></Worksheet></Workbook>`;
 }
-function bindVolunteerPage(){
-  document.getElementById('volSearch')?.addEventListener('input',e=>{volunteerSearch=e.target.value;render();document.getElementById('volSearch')?.focus();});
-  document.getElementById('pageImport')?.addEventListener('click',openImportModal); document.getElementById('addVolunteer')?.addEventListener('click',()=>openVolunteerModal());
-  document.querySelectorAll('[data-edit-volunteer]').forEach(b=>b.addEventListener('click',()=>openVolunteerModal(state.volunteers.find(v=>v.id===b.dataset.editVolunteer))));
-  document.querySelectorAll('[data-delete-volunteer]').forEach(b=>b.addEventListener('click',()=>{const vid=b.dataset.deleteVolunteer;if(confirm('確定刪除此義工及其所有編更？')){state.volunteers=state.volunteers.filter(v=>v.id!==vid);state.shifts=state.shifts.filter(s=>s.volunteerId!==vid);saveState();render();}}));
+function downloadStatsExcel(){ const evt=currentEvent(),rows=statsRows(),selectionLabel=statsSelectionLabel();const label=statsMode==='volunteer'?'個人':statsMode==='center'?'中心':'組別';downloadBlob(new Blob(['\ufeff'+spreadsheetXml(rows,`${evt.name}-${selectionLabel}`)],{type:'application/vnd.ms-excel;charset=utf-8'}),`${safeFileName(evt.name)}_${label}_${safeFileName(selectionLabel)}.xls`); }
+function downloadFullEventExcel(){ const evt=currentEvent();const oldMode=statsMode,oldSelection=statsSelection;const rows=evt.shifts.slice().sort((a,b)=>a.start-b.start).map(s=>{const v=state.volunteers.find(x=>x.id===s.volunteerId),p=evt.positions.find(x=>x.id===s.positionId),g=evt.groups.find(x=>x.id===s.groupId);return {date:evt.date,volunteer:v?.name||'',center:v?.center||'',memberGroup:v?.group||'',scheduleGroup:g?.name||'',position:p?.name||'',start:formatTime(s.start),end:formatTime(s.end),hours:hours(s.start,s.end)};});downloadBlob(new Blob(['\ufeff'+spreadsheetXml(rows,evt.name)],{type:'application/vnd.ms-excel;charset=utf-8'}),`${safeFileName(evt.name)}_全活動更表.xls`);statsMode=oldMode;statsSelection=oldSelection; }
+function truncateText(ctx,text,maxWidth){ const s=String(text??'');if(ctx.measureText(s).width<=maxWidth)return s;let out=s;while(out.length>1&&ctx.measureText(out+'…').width>maxWidth)out=out.slice(0,-1);return out+'…'; }
+async function downloadStatsPDF(){
+  const evt=currentEvent(),rows=statsRows(),modeLabel=statsMode==='volunteer'?'個人':statsMode==='center'?'所屬中心':'所屬組別',selectionLabel=statsSelectionLabel(),perPage=16,pages=[];const chunks=[];for(let i=0;i<Math.max(1,Math.ceil(rows.length/perPage));i++)chunks.push(rows.slice(i*perPage,(i+1)*perPage));
+  for(let pageIndex=0;pageIndex<chunks.length;pageIndex++){const pageRows=chunks[pageIndex],canvas=document.createElement('canvas');canvas.width=1684;canvas.height=1190;const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#17345f';ctx.font='bold 44px "Microsoft JhengHei","Noto Sans TC",sans-serif';ctx.fillText(`${modeLabel}專屬更表`,70,82);ctx.font='bold 28px "Microsoft JhengHei","Noto Sans TC",sans-serif';ctx.fillText(truncateText(ctx,evt.name,980),70,128);ctx.fillStyle='#66778e';ctx.font='22px "Microsoft JhengHei","Noto Sans TC",sans-serif';ctx.fillText(`${dateLabel(evt.date)}　${formatTime(evt.start)}–${formatTime(evt.end)}　｜　${selectionLabel}`,70,170);ctx.textAlign='right';ctx.fillText(`第 ${pageIndex+1} / ${chunks.length} 頁`,1610,170);ctx.textAlign='left';
+    const cols=[70,215,555,735,975,1215,1450,1615],headers=['日期','義工（中心）','所屬組別','編更分組','崗位','時間','時數'];const top=220,rowH=50;ctx.fillStyle='#eaf2fd';ctx.fillRect(60,top-38,1560,50);ctx.fillStyle='#244567';ctx.font='bold 19px "Microsoft JhengHei","Noto Sans TC",sans-serif';headers.forEach((h,j)=>ctx.fillText(h,cols[j],top-5));ctx.strokeStyle='#dce5f0';ctx.lineWidth=1;ctx.font='17px "Microsoft JhengHei","Noto Sans TC",sans-serif';pageRows.forEach((r,idx)=>{const y=top+22+idx*rowH;if(idx%2===1){ctx.fillStyle='#f8fafc';ctx.fillRect(60,y-30,1560,rowH);}ctx.fillStyle='#2f435e';const cells=[r.date,`${r.volunteer}（${r.center||'未填中心'}）`,r.memberGroup||'—',r.scheduleGroup,r.position,`${r.start}–${r.end}`,r.hours.toFixed(1)];const widths=[130,325,165,225,225,220,120];cells.forEach((cell,j)=>ctx.fillText(truncateText(ctx,cell,widths[j]),cols[j],y));ctx.beginPath();ctx.moveTo(60,y+15);ctx.lineTo(1620,y+15);ctx.stroke();});ctx.fillStyle='#6b7b91';ctx.font='18px "Microsoft JhengHei","Noto Sans TC",sans-serif';const total=rows.reduce((n,r)=>n+r.hours,0);ctx.fillText(`共 ${rows.length} 班｜總服務時數 ${total.toFixed(1)} 小時`,70,1120);pages.push(canvas.toDataURL('image/jpeg',0.92));}
+  downloadBlob(pdfFromJpegs(pages,1684,1190),`${safeFileName(evt.name)}_${modeLabel}_${safeFileName(selectionLabel)}.pdf`);toast('PDF 已產生');
 }
-
-function positionPageHTML(){return `<div class="content-page"><div class="page-actions"><div class="page-note">每個崗位可自訂所需人數、所屬編更分組及顏色。</div><button class="primary-button" id="addPosition">＋ 新增崗位</button></div><div class="management-grid">${state.positions.map(p=>`<div class="management-card"><div class="management-card-head"><span class="group-dot large" style="background:${p.color}"></span><div><strong>${esc(p.name)}</strong><small>${esc(state.groups.find(g=>g.id===p.groupId)?.name||'未分組')}</small></div></div><div class="people-number"><strong>${p.required}</strong><span>所需人數</span></div><div class="card-actions"><button data-edit-position="${p.id}">編輯</button><button class="danger-text" data-delete-position="${p.id}">刪除</button></div></div>`).join('')}</div></div>`;}
-function bindPositionPage(){document.getElementById('addPosition')?.addEventListener('click',()=>openPositionModal());document.querySelectorAll('[data-edit-position]').forEach(b=>b.addEventListener('click',()=>openPositionModal(state.positions.find(p=>p.id===b.dataset.editPosition))));document.querySelectorAll('[data-delete-position]').forEach(b=>b.addEventListener('click',()=>{const pid=b.dataset.deletePosition;if(confirm('確定刪除此崗位及相關編更？')){state.positions=state.positions.filter(p=>p.id!==pid);state.shifts=state.shifts.filter(s=>s.positionId!==pid);saveState();render();}}));}
-function groupPageHTML(){return `<div class="content-page"><div class="page-actions"><div class="page-note">分組可代表工作隊、區域、場地或任何你需要的編更分類。</div><button class="primary-button" id="addGroup">＋ 新增分組</button></div><div class="management-grid">${state.groups.map(g=>`<div class="management-card"><div class="management-card-head"><span class="group-dot large" style="background:${g.color}"></span><div><strong>${esc(g.name)}</strong><small>${esc(state.positions.filter(p=>p.groupId===g.id).map(p=>p.name).join('、')||'未有崗位')}</small></div></div><div class="people-number"><strong>${state.positions.filter(p=>p.groupId===g.id).length}</strong><span>崗位</span></div><div class="card-actions"><button data-edit-group="${g.id}">編輯</button><button class="danger-text" data-delete-group="${g.id}">刪除</button></div></div>`).join('')}</div></div>`;}
-function bindGroupPage(){document.getElementById('addGroup')?.addEventListener('click',()=>openGroupModal());document.querySelectorAll('[data-edit-group]').forEach(b=>b.addEventListener('click',()=>openGroupModal(state.groups.find(g=>g.id===b.dataset.editGroup))));document.querySelectorAll('[data-delete-group]').forEach(b=>b.addEventListener('click',()=>{const gid=b.dataset.deleteGroup;if(state.positions.some(p=>p.groupId===gid))return alert('此分組仍有崗位，請先移動或刪除相關崗位。');if(confirm('確定刪除此分組？')){state.groups=state.groups.filter(g=>g.id!==gid);saveState();render();}}));}
-
-function settingsHTML(){
-  const entries=Object.entries(state.lunch.individual||{}).map(([vid,l])=>({vol:state.volunteers.find(v=>v.id===vid),l})).filter(x=>x.vol);
-  return `<div class="content-page settings-stack"><section class="panel"><h2>午膳時間顯示</h2><p>可使用所有義工共用的統一時段，或切換至分段安排，逐一設定每名義工的午膳時間。</p><div class="settings-row"><label class="switch-label"><input id="setLunchEnabled" type="checkbox" ${state.lunch.enabled?'checked':''}>啟用顯示</label><div class="lunch-mode-switch"><button class="${state.lunch.mode!=='staggered'?'active':''}" data-set-lunch-mode="uniform">統一時段</button><button class="${state.lunch.mode==='staggered'?'active':''}" data-set-lunch-mode="staggered">分段安排</button></div>${state.lunch.mode==='staggered'?`<button class="secondary-button" id="setAddVolunteerLunch">＋ 新增義工午膳</button>`:`<label>開始 <input id="setLunchStart" type="time" value="${formatTime(state.lunch.start)}"></label><label>結束 <input id="setLunchEnd" type="time" value="${formatTime(state.lunch.end)}"></label>`}</div>${state.lunch.mode==='staggered'?`<div class="settings-personal-lunch">${entries.length?entries.map(({vol,l})=>`<button class="personal-lunch-chip" data-set-edit-lunch="${vol.id}"><strong>${esc(vol.name)}</strong><span>${formatTime(l.start)}–${formatTime(l.end)}</span></button>`).join(''):'<span class="lunch-empty">尚未設定個別午膳時間</span>'}</div>`:''}</section><section class="panel danger-panel"><h2>示範資料</h2><p>重設會清除目前瀏覽器儲存的資料，恢復初始示範義工、更表、分組及崗位。</p><button class="danger-button" id="resetData">重設全部資料</button></section></div>`;
-}
-function bindSettings(){
-  document.getElementById('setLunchEnabled')?.addEventListener('change',e=>{state.lunch.enabled=e.target.checked;saveState();render();});
-  document.querySelectorAll('[data-set-lunch-mode]').forEach(b=>b.addEventListener('click',()=>{state.lunch.mode=b.dataset.setLunchMode;state.lunch.enabled=true;saveState();render();}));
-  document.getElementById('setLunchStart')?.addEventListener('change',e=>{state.lunch.start=inputTime(e.target.value);saveState();render();});
-  document.getElementById('setLunchEnd')?.addEventListener('change',e=>{state.lunch.end=inputTime(e.target.value);saveState();render();});
-  document.getElementById('setAddVolunteerLunch')?.addEventListener('click',()=>openVolunteerLunchModal());
-  document.querySelectorAll('[data-set-edit-lunch]').forEach(b=>b.addEventListener('click',()=>openVolunteerLunchModal(b.dataset.setEditLunch)));
-  document.getElementById('resetData')?.addEventListener('click',()=>{if(confirm('確定重設全部資料？此操作不可還原。')){state=normalizeState(clone(seed));selectedShiftId=state.shifts[0]?.id||'';activeGroupFilter='all';localStorage.removeItem(STORAGE_KEY);render();toast('已重設示範資料');}});
+function dataUrlBytes(url){const b64=url.split(',')[1],bin=atob(b64),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;}
+function pdfFromJpegs(dataUrls,imgW,imgH){
+  const encoder=new TextEncoder(),chunks=[],offsets=[0];let offset=0;const pushBytes=b=>{chunks.push(b);offset+=b.length;},pushText=s=>pushBytes(encoder.encode(s));pushText('%PDF-1.4\n%PDFGEN\n');const n=dataUrls.length,pageIds=[],imageIds=[],contentIds=[];for(let i=0;i<n;i++){pageIds.push(3+i*3);imageIds.push(4+i*3);contentIds.push(5+i*3);}const writeObj=(num,writer)=>{offsets[num]=offset;pushText(`${num} 0 obj\n`);writer();pushText('\nendobj\n');};writeObj(1,()=>pushText('<< /Type /Catalog /Pages 2 0 R >>'));writeObj(2,()=>pushText(`<< /Type /Pages /Count ${n} /Kids [${pageIds.map(x=>`${x} 0 R`).join(' ')}] >>`));for(let i=0;i<n;i++){const jpeg=dataUrlBytes(dataUrls[i]);writeObj(pageIds[i],()=>pushText(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /XObject << /Im${i} ${imageIds[i]} 0 R >> >> /Contents ${contentIds[i]} 0 R >>`));writeObj(imageIds[i],()=>{pushText(`<< /Type /XObject /Subtype /Image /Width ${imgW} /Height ${imgH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);pushBytes(jpeg);pushText('\nendstream');});const stream=`q\n842 0 0 595 0 0 cm\n/Im${i} Do\nQ\n`;writeObj(contentIds[i],()=>pushText(`<< /Length ${stream.length} >>\nstream\n${stream}endstream`));}const xref=offset,maxObj=2+n*3;pushText(`xref\n0 ${maxObj+1}\n0000000000 65535 f \n`);for(let i=1;i<=maxObj;i++)pushText(`${String(offsets[i]||0).padStart(10,'0')} 00000 n \n`);pushText(`trailer\n<< /Size ${maxObj+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);return new Blob(chunks,{type:'application/pdf'});
 }
 
-function showModal(title,body,wide=false){
-  document.querySelector('.modal-backdrop')?.remove(); const wrap=document.createElement('div');wrap.className='modal-backdrop';wrap.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true"><div class="modal-header"><h2>${esc(title)}</h2><button class="icon-button modal-close">×</button></div><div class="modal-body">${body}</div></div>`;document.body.appendChild(wrap);wrap.addEventListener('mousedown',e=>{if(e.target===wrap)wrap.remove();});wrap.querySelector('.modal-close').addEventListener('click',()=>wrap.remove());return wrap;
-}
+function volunteerPageHTML(){ const list=state.volunteers.filter(v=>`${v.name} ${v.center} ${v.group}`.toLowerCase().includes(volunteerSearch.toLowerCase()));return `<div class="content-page"><div class="page-actions"><div class="search-box">⌕<input id="volSearch" value="${esc(volunteerSearch)}" placeholder="搜尋 ${state.volunteers.length} 位義工"></div><button class="secondary-button" id="pageImport">▤ Excel 匯入</button><button class="primary-button" id="addVolunteer">＋ 新增義工</button></div><div class="table-wrap"><table><thead><tr><th>姓名</th><th>所屬中心</th><th>所屬組別</th><th>可服務時間</th><th>電話</th><th>電郵</th><th></th></tr></thead><tbody>${list.map(v=>`<tr><td><strong>${esc(v.name)}</strong></td><td>${esc(v.center||'—')}</td><td>${esc(v.group||'—')}</td><td>${formatTime(v.availabilityStart??480)}–${formatTime(v.availabilityEnd??1080)}</td><td>${esc(v.phone||'—')}</td><td>${esc(v.email||'—')}</td><td class="table-actions"><button data-edit-volunteer="${v.id}">編輯</button><button class="danger-text" data-delete-volunteer="${v.id}">刪除</button></td></tr>`).join('')}</tbody></table></div></div>`; }
+function bindVolunteerPage(){ document.getElementById('volSearch')?.addEventListener('input',e=>{volunteerSearch=e.target.value;render();document.getElementById('volSearch')?.focus();});document.getElementById('pageImport')?.addEventListener('click',openImportModal);document.getElementById('addVolunteer')?.addEventListener('click',()=>openVolunteerModal());document.querySelectorAll('[data-edit-volunteer]').forEach(b=>b.addEventListener('click',()=>openVolunteerModal(state.volunteers.find(v=>v.id===b.dataset.editVolunteer))));document.querySelectorAll('[data-delete-volunteer]').forEach(b=>b.addEventListener('click',()=>{const vid=b.dataset.deleteVolunteer;if(confirm('確定刪除此義工？其所有活動內的相關班次亦會刪除。')){state.volunteers=state.volunteers.filter(v=>v.id!==vid);state.events.forEach(e=>{e.shifts=e.shifts.filter(s=>s.volunteerId!==vid);delete e.lunch.individual?.[vid];});saveState();render();}})); }
+function settingsHTML(){ return `<div class="content-page settings-stack"><section class="panel"><h2>活動資料架構</h2><p>每個活動都有獨立日期、時間、分組、崗位、班次及午膳設定；義工名單則由所有活動共用。</p><div class="mini-summary"><span>活動：${state.events.length} 個</span><span>義工：${state.volunteers.length} 人</span></div></section><section class="panel danger-panel"><h2>重設示範資料</h2><p>重設會清除目前瀏覽器儲存的活動、義工及更表，恢復初始示範資料。</p><button class="danger-button" id="resetData">重設全部資料</button></section></div>`; }
+function bindSettings(){ document.getElementById('resetData')?.addEventListener('click',()=>{if(confirm('確定重設全部資料？此操作不可還原。')){state=normalizeState(clone(seed));selectedShiftId=currentEvent()?.shifts?.[0]?.id||'';activeGroupFilter='all';localStorage.removeItem(STORAGE_KEY);view='events';render();toast('已重設示範資料');}}); }
 
-function openVolunteerModal(v){
-  const x=v||{id:'',name:'',center:'',group:'',phone:'',email:'',availabilityStart:540,availabilityEnd:1080};
-  const modal=showModal(v?'編輯義工資料':'新增義工',`<div class="form-grid"><label>姓名<input id="fName" value="${esc(x.name)}"></label><label>所屬中心<input id="fCenter" value="${esc(x.center)}"></label><label>所屬組別<input id="fGroup" value="${esc(x.group)}"></label><label>電話<input id="fPhone" value="${esc(x.phone||'')}"></label><label class="full-field">電郵<input id="fEmail" type="email" value="${esc(x.email||'')}"></label><label>可服務開始<input id="fStart" type="time" value="${formatTime(x.availabilityStart??540)}"></label><label>可服務結束<input id="fEnd" type="time" value="${formatTime(x.availabilityEnd??1080)}"></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveVolunteer">儲存</button></div>`);
-  modal.querySelector('.modal-cancel').onclick=()=>modal.remove(); modal.querySelector('#saveVolunteer').onclick=()=>{const name=modal.querySelector('#fName').value.trim();if(!name)return alert('請輸入姓名。');const obj={...x,id:x.id||id('v'),name,center:modal.querySelector('#fCenter').value.trim(),group:modal.querySelector('#fGroup').value.trim(),phone:modal.querySelector('#fPhone').value.trim(),email:modal.querySelector('#fEmail').value.trim(),availabilityStart:inputTime(modal.querySelector('#fStart').value),availabilityEnd:inputTime(modal.querySelector('#fEnd').value)};if(v)state.volunteers=state.volunteers.map(i=>i.id===v.id?obj:i);else state.volunteers.push(obj);saveState();modal.remove();render();toast('義工資料已儲存');};
+function showModal(title,body,wide=false){ document.querySelector('.modal-backdrop')?.remove();const wrap=document.createElement('div');wrap.className='modal-backdrop';wrap.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true"><div class="modal-header"><h2>${esc(title)}</h2><button class="icon-button modal-close">×</button></div><div class="modal-body">${body}</div></div>`;document.body.appendChild(wrap);wrap.addEventListener('mousedown',e=>{if(e.target===wrap)wrap.remove();});wrap.querySelector('.modal-close').addEventListener('click',()=>wrap.remove());return wrap; }
+function openEventModal(evt){
+  const draft=evt?clone(evt):{id:'',name:'',date:new Date().toISOString().slice(0,10),start:540,end:1020,groups:[{id:id('g'),name:'A組',color:COLORS[0]}],positions:[],shifts:[],lunch:{enabled:true,mode:'uniform',start:720,end:780,individual:{}}};
+  const modal=showModal(evt?'修改活動':'新增活動',`<div class="event-form"><div class="form-grid"><label class="full-field">活動名稱<input id="eName" value="${esc(draft.name)}" placeholder="例如：接得住的社區－Day 1"></label><label>活動日期<input id="eDate" type="date" value="${draft.date}"></label><label>活動時間<div class="inline-time-pair"><input id="eStart" type="time" step="900" value="${formatTime(draft.start)}"><span>至</span><input id="eEnd" type="time" step="900" value="${formatTime(draft.end)}"></div></label></div><div class="structure-builder-head"><div><strong>分組及崗位</strong><small>先新增分組，再在每個分組下新增崗位及所需人數。</small></div><button class="secondary-button" id="builderAddGroup">＋ 新增分組</button></div><div id="structureBuilder"></div><div class="hint-box">刪除已有義工班次的分組／崗位亦可以儲存；系統會在儲存活動時自動移除相關班次。</div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveEvent">${evt?'儲存活動設定':'建立活動並編更'}</button></div></div>`,true);
+  const renderBuilder=()=>{const box=modal.querySelector('#structureBuilder');box.innerHTML=draft.groups.map((g,gi)=>`<section class="builder-group" data-builder-group="${g.id}"><div class="builder-group-head"><span class="group-dot large" style="background:${g.color}"></span><input data-group-name="${g.id}" value="${esc(g.name)}" placeholder="分組名稱"><input data-group-color="${g.id}" type="color" value="${g.color}"><button class="danger-ghost compact-button" data-remove-builder-group="${g.id}">刪除分組</button></div><div class="builder-position-list">${draft.positions.filter(p=>p.groupId===g.id).map(p=>`<div class="builder-position-row"><input data-position-name="${p.id}" value="${esc(p.name)}" placeholder="崗位名稱"><label>所需 <input data-position-required="${p.id}" type="number" min="1" max="99" value="${p.required}"> 人</label><button class="danger-text" data-remove-builder-position="${p.id}">刪除</button></div>`).join('')}<button class="builder-add-position" data-builder-add-position="${g.id}">＋ 新增崗位</button></div></section>`).join('')||'<div class="builder-empty">未有分組，請先新增分組。</div>';bindBuilder();};
+  const bindBuilder=()=>{modal.querySelectorAll('[data-group-name]').forEach(i=>i.addEventListener('input',()=>{const g=draft.groups.find(x=>x.id===i.dataset.groupName);if(g)g.name=i.value;}));modal.querySelectorAll('[data-group-color]').forEach(i=>i.addEventListener('input',()=>{const g=draft.groups.find(x=>x.id===i.dataset.groupColor);if(g){g.color=i.value;draft.positions.filter(p=>p.groupId===g.id).forEach(p=>p.color=i.value);}}));modal.querySelectorAll('[data-position-name]').forEach(i=>i.addEventListener('input',()=>{const p=draft.positions.find(x=>x.id===i.dataset.positionName);if(p)p.name=i.value;}));modal.querySelectorAll('[data-position-required]').forEach(i=>i.addEventListener('input',()=>{const p=draft.positions.find(x=>x.id===i.dataset.positionRequired);if(p)p.required=Math.max(1,Number(i.value)||1);}));modal.querySelectorAll('[data-builder-add-position]').forEach(b=>b.addEventListener('click',()=>{const g=draft.groups.find(x=>x.id===b.dataset.builderAddPosition);draft.positions.push({id:id('p'),name:'新崗位',required:1,groupId:g.id,color:g.color});renderBuilder();}));modal.querySelectorAll('[data-remove-builder-position]').forEach(b=>b.addEventListener('click',()=>{draft.positions=draft.positions.filter(p=>p.id!==b.dataset.removeBuilderPosition);renderBuilder();}));modal.querySelectorAll('[data-remove-builder-group]').forEach(b=>b.addEventListener('click',()=>{const gid=b.dataset.removeBuilderGroup;draft.groups=draft.groups.filter(g=>g.id!==gid);draft.positions=draft.positions.filter(p=>p.groupId!==gid);renderBuilder();}));};
+  modal.querySelector('#builderAddGroup').onclick=()=>{draft.groups.push({id:id('g'),name:`${String.fromCharCode(65+draft.groups.length)}組`,color:COLORS[draft.groups.length%COLORS.length]});renderBuilder();};renderBuilder();modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#saveEvent').onclick=()=>{const name=modal.querySelector('#eName').value.trim(),date=modal.querySelector('#eDate').value,start=inputTime(modal.querySelector('#eStart').value),end=inputTime(modal.querySelector('#eEnd').value);if(!name)return alert('請輸入活動名稱。');if(!date)return alert('請選擇活動日期。');if(end<=start)return alert('活動結束時間必須遲於開始時間。');if(!draft.groups.length)return alert('請至少新增一個分組。');if(!draft.positions.length)return alert('請至少在分組下新增一個崗位。');if(draft.groups.some(g=>!g.name.trim()))return alert('請填寫所有分組名稱。');if(draft.positions.some(p=>!p.name.trim()))return alert('請填寫所有崗位名稱。');
+    draft.name=name;draft.date=date;draft.start=start;draft.end=end;draft.groups.forEach((g,i)=>{g.name=g.name.trim();g.color=g.color||COLORS[i%COLORS.length];});draft.positions.forEach(p=>{p.name=p.name.trim();p.required=Math.max(1,Number(p.required)||1);p.color=draft.groups.find(g=>g.id===p.groupId)?.color||p.color||COLORS[0];});const validP=new Set(draft.positions.map(p=>p.id)),validG=new Set(draft.groups.map(g=>g.id));draft.shifts=(draft.shifts||[]).filter(s=>validP.has(s.positionId)&&validG.has(s.groupId)).map(s=>({...s,start:clamp(s.start,start,end-15),end:clamp(s.end,start+15,end)})).filter(s=>s.end>s.start);{const prevLunch=draft.lunch||{};draft.lunch={...prevLunch,enabled:prevLunch.enabled!==false,mode:prevLunch.mode||'uniform',start:clamp(prevLunch.start??720,start,end-15),end:clamp(prevLunch.end??780,start+15,end),individual:prevLunch.individual||{}};}
+    if(evt){state.events=state.events.map(e=>e.id===evt.id?{...draft,id:evt.id}:e);state.activeEventId=evt.id;}else{draft.id=id('event');state.events.push(draft);state.activeEventId=draft.id;}saveState();modal.remove();activeGroupFilter='all';selectedShiftId=currentEvent()?.shifts?.[0]?.id||'';view='schedule';render();toast(evt?'活動設定已更新':'活動已建立');};
 }
+function openVolunteerModal(v){ const x=v||{id:'',name:'',center:'',group:'',phone:'',email:'',availabilityStart:540,availabilityEnd:1080};const modal=showModal(v?'編輯義工資料':'新增義工',`<div class="form-grid"><label>姓名<input id="fName" value="${esc(x.name)}"></label><label>所屬中心<input id="fCenter" value="${esc(x.center)}"></label><label>所屬組別<input id="fGroup" value="${esc(x.group)}"></label><label>電話<input id="fPhone" value="${esc(x.phone||'')}"></label><label class="full-field">電郵<input id="fEmail" type="email" value="${esc(x.email||'')}"></label><label>可服務開始<input id="fStart" type="time" value="${formatTime(x.availabilityStart??540)}"></label><label>可服務結束<input id="fEnd" type="time" value="${formatTime(x.availabilityEnd??1080)}"></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveVolunteer">儲存</button></div>`);modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#saveVolunteer').onclick=()=>{const name=modal.querySelector('#fName').value.trim();if(!name)return alert('請輸入姓名。');const obj={...x,id:x.id||id('v'),name,center:modal.querySelector('#fCenter').value.trim(),group:modal.querySelector('#fGroup').value.trim(),phone:modal.querySelector('#fPhone').value.trim(),email:modal.querySelector('#fEmail').value.trim(),availabilityStart:inputTime(modal.querySelector('#fStart').value),availabilityEnd:inputTime(modal.querySelector('#fEnd').value)};if(v)state.volunteers=state.volunteers.map(i=>i.id===v.id?obj:i);else state.volunteers.push(obj);saveState();modal.remove();render();toast('義工資料已儲存');}; }
+function openGroupModal(g){ const evt=currentEvent();if(!evt)return;const x=g||{id:'',name:'',color:COLORS[evt.groups.length%COLORS.length]};const modal=showModal(g?'編輯分組':'新增分組',`<div class="form-stack"><label>分組名稱<input id="gName" value="${esc(x.name)}" placeholder="例如：A組－接待及登記組"></label><label>分組顏色<div class="color-picker-row">${COLORS.map(c=>`<button class="color-swatch ${x.color===c?'selected':''}" data-color="${c}" style="background:${c}"></button>`).join('')}<input id="gColor" type="color" value="${x.color}"></div></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveGroup">儲存</button></div>`);modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{modal.querySelector('#gColor').value=b.dataset.color;modal.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('selected',s===b));});modal.querySelector('#saveGroup').onclick=()=>{const name=modal.querySelector('#gName').value.trim();if(!name)return alert('請輸入分組名稱。');const obj={...x,id:x.id||id('g'),name,color:modal.querySelector('#gColor').value};if(g){evt.groups=evt.groups.map(i=>i.id===g.id?obj:i);evt.positions.filter(p=>p.groupId===g.id).forEach(p=>p.color=obj.color);}else evt.groups.push(obj);saveState();modal.remove();render();toast('分組已儲存');}; }
+function openPositionModal(p,forcedGroupId=''){ const evt=currentEvent();if(!evt?.groups.length)return alert('請先建立至少一個分組。');const defaultGroup=evt.groups.find(g=>g.id===forcedGroupId)||evt.groups[0],x=p||{id:'',name:'',required:1,groupId:defaultGroup.id,color:defaultGroup.color};const modal=showModal(p?'編輯崗位':'新增崗位',`<div class="form-grid"><label>崗位名稱<input id="pName" value="${esc(x.name)}" placeholder="例如：接待處"></label><label>所需人數<input id="pRequired" type="number" min="1" max="99" value="${x.required}"></label><label class="full-field">所屬分組<select id="pGroup">${evt.groups.map(g=>`<option value="${g.id}" ${x.groupId===g.id?'selected':''}>${esc(g.name)}</option>`).join('')}</select></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="savePosition">儲存</button></div>`);modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#savePosition').onclick=()=>{const name=modal.querySelector('#pName').value.trim();if(!name)return alert('請輸入崗位名稱。');const gid=modal.querySelector('#pGroup').value,obj={...x,id:x.id||id('p'),name,required:Math.max(1,Number(modal.querySelector('#pRequired').value)||1),groupId:gid,color:evt.groups.find(g=>g.id===gid)?.color||x.color};if(p){evt.positions=evt.positions.map(i=>i.id===p.id?obj:i);evt.shifts.filter(s=>s.positionId===p.id).forEach(s=>s.groupId=gid);}else evt.positions.push(obj);saveState();modal.remove();render();toast('崗位已儲存');}; }
+function openVolunteerLunchModal(volunteerId=''){ const evt=currentEvent();if(!evt)return;if(!state.volunteers.length)return alert('請先新增或匯入義工。');const currentId=volunteerId||state.volunteers.find(v=>!evt.lunch.individual?.[v.id])?.id||state.volunteers[0].id,existing=evt.lunch.individual?.[currentId]||{start:clamp(720,evt.start,evt.end-15),end:clamp(780,evt.start+15,evt.end)};const modal=showModal(volunteerId?'編輯義工午膳':'新增義工午膳',`<div class="form-grid"><label class="full-field">義工<select id="lVolunteer">${state.volunteers.map(v=>`<option value="${v.id}" ${v.id===currentId?'selected':''}>${esc(v.name)}｜${esc(v.center)}｜${esc(v.group)}</option>`).join('')}</select></label><label>午膳開始<input id="lStart" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" step="900" value="${formatTime(existing.start)}"></label><label>午膳結束<input id="lEnd" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" step="900" value="${formatTime(existing.end)}"></label></div><div class="hint-box">分段安排會按義工本人顯示午膳；午膳落在班次內時，會直接標示於該義工班次。</div><div class="modal-actions">${volunteerId?'<button class="danger-button" id="deleteVolunteerLunch">刪除午膳</button>':''}<button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveVolunteerLunch">儲存午膳</button></div>`);const select=modal.querySelector('#lVolunteer'),startInput=modal.querySelector('#lStart'),endInput=modal.querySelector('#lEnd');select.onchange=e=>{const l=evt.lunch.individual?.[e.target.value];if(l){startInput.value=formatTime(l.start);endInput.value=formatTime(l.end);}};modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#saveVolunteerLunch').onclick=()=>{const vid=select.value,st=inputTime(startInput.value),en=inputTime(endInput.value);if(en<=st)return alert('午膳結束時間必須遲於開始時間。');if(volunteerId&&volunteerId!==vid)delete evt.lunch.individual[volunteerId];evt.lunch.mode='staggered';evt.lunch.enabled=true;evt.lunch.individual[vid]={start:st,end:en};saveState();modal.remove();render();toast('義工午膳時間已儲存');};modal.querySelector('#deleteVolunteerLunch')?.addEventListener('click',()=>{delete evt.lunch.individual[volunteerId];saveState();modal.remove();render();toast('已刪除義工午膳時間');}); }
+function openShiftModal(s,defaultPositionId,defaultStart){ const evt=currentEvent();if(!evt)return;if(!state.volunteers.length)return alert('請先新增或匯入義工。');if(!evt.positions.length)return alert('請先在活動設定新增崗位。');const filtered=activeGroupFilter==='all'?evt.positions:evt.positions.filter(p=>p.groupId===activeGroupFilter),positionId=s?.positionId||defaultPositionId||filtered[0]?.id||evt.positions[0].id,pos=evt.positions.find(p=>p.id===positionId),start=s?.start??defaultStart??evt.start,x=s||{id:'',volunteerId:state.volunteers[0].id,positionId,groupId:pos.groupId,start,end:Math.min(start+180,evt.end)};const volunteerField=s?`<label class="full-field">義工<select id="sVolunteer">${state.volunteers.map(v=>`<option value="${v.id}" ${x.volunteerId===v.id?'selected':''}>${esc(v.name)}（${esc(v.center||'未填中心')}）｜${esc(v.group)}</option>`).join('')}</select></label>`:`<div class="full-field multi-volunteer-field"><span>義工（可同時選擇多位）</span><div class="volunteer-multi-list">${state.volunteers.map((v,i)=>`<label><input type="checkbox" name="sVolunteers" value="${v.id}" ${i===0?'checked':''}><span><strong>${esc(v.name)}（${esc(v.center||'未填中心')}）</strong><small>${esc(v.group)}</small></span></label>`).join('')}</div></div>`;const modal=showModal(s?'編輯班次':'新增編更',`<div class="form-grid">${volunteerField}<label class="full-field">崗位<select id="sPosition">${evt.positions.map(p=>`<option value="${p.id}" ${x.positionId===p.id?'selected':''}>${esc(evt.groups.find(g=>g.id===p.groupId)?.name||'')}｜${esc(p.name)}</option>`).join('')}</select></label><label>開始時間<input id="sStart" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" step="900" value="${formatTime(x.start)}"></label><label>結束時間<input id="sEnd" type="time" min="${formatTime(evt.start)}" max="${formatTime(evt.end)}" step="900" value="${formatTime(x.end)}"></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveShift">${s?'儲存班次':'建立所選義工班次'}</button></div>`,!s);modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#saveShift').onclick=()=>{const st=inputTime(modal.querySelector('#sStart').value),en=inputTime(modal.querySelector('#sEnd').value);if(en<=st)return alert('結束時間必須遲於開始時間。');const pid=modal.querySelector('#sPosition').value,p=evt.positions.find(p=>p.id===pid);if(s){const obj={...x,id:x.id,volunteerId:modal.querySelector('#sVolunteer').value,positionId:pid,groupId:p.groupId,start:st,end:en};evt.shifts=evt.shifts.map(i=>i.id===s.id?obj:i);selectedShiftId=obj.id;}else{const volunteerIds=[...modal.querySelectorAll('input[name="sVolunteers"]:checked')].map(i=>i.value);if(!volunteerIds.length)return alert('請至少選擇一名義工。');const created=volunteerIds.map(vid=>({id:id('s'),volunteerId:vid,positionId:pid,groupId:p.groupId,start:st,end:en}));evt.shifts.push(...created);selectedShiftId=created[0].id;}saveState();modal.remove();render();toast(s?'班次已儲存':'已建立所選義工班次');}; }
 
-function openGroupModal(g){
-  const x=g||{id:'',name:'',color:COLORS[state.groups.length%COLORS.length]};
-  const modal=showModal(g?'編輯分組':'新增分組',`<div class="form-stack"><label>分組名稱<input id="gName" value="${esc(x.name)}" placeholder="例如：A組－接待及登記組"></label><label>分組顏色<div class="color-picker-row">${COLORS.map(c=>`<button class="color-swatch ${x.color===c?'selected':''}" data-color="${c}" style="background:${c}"></button>`).join('')}<input id="gColor" type="color" value="${x.color}"></div></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveGroup">儲存</button></div>`);
-  modal.querySelector('.modal-cancel').onclick=()=>modal.remove(); modal.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{modal.querySelector('#gColor').value=b.dataset.color;modal.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('selected',s===b));});modal.querySelector('#saveGroup').onclick=()=>{const name=modal.querySelector('#gName').value.trim();if(!name)return alert('請輸入分組名稱。');const obj={...x,id:x.id||id('g'),name,color:modal.querySelector('#gColor').value};if(g){state.groups=state.groups.map(i=>i.id===g.id?obj:i);}else state.groups.push(obj);saveState();modal.remove();render();toast('分組已儲存');};
-}
-
-function openPositionModal(p){
-  if(!state.groups.length)return alert('請先建立至少一個分組。'); const x=p||{id:'',name:'',required:1,groupId:state.groups[0].id,color:state.groups[0].color};
-  const modal=showModal(p?'編輯崗位':'新增崗位',`<div class="form-grid"><label>崗位名稱<input id="pName" value="${esc(x.name)}" placeholder="例如：接待處"></label><label>所需人數<input id="pRequired" type="number" min="1" max="99" value="${x.required}"></label><label class="full-field">所屬分組<select id="pGroup">${state.groups.map(g=>`<option value="${g.id}" ${x.groupId===g.id?'selected':''}>${esc(g.name)}</option>`).join('')}</select></label><label class="full-field">崗位顏色<input id="pColor" type="color" value="${x.color}"></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="savePosition">儲存</button></div>`);
-  modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#pGroup').onchange=e=>{modal.querySelector('#pColor').value=state.groups.find(g=>g.id===e.target.value)?.color||x.color;};modal.querySelector('#savePosition').onclick=()=>{const name=modal.querySelector('#pName').value.trim();if(!name)return alert('請輸入崗位名稱。');const obj={...x,id:x.id||id('p'),name,required:Math.max(1,Number(modal.querySelector('#pRequired').value)||1),groupId:modal.querySelector('#pGroup').value,color:modal.querySelector('#pColor').value};if(p){state.positions=state.positions.map(i=>i.id===p.id?obj:i);for(const s of state.shifts.filter(s=>s.positionId===p.id))s.groupId=obj.groupId;}else state.positions.push(obj);saveState();modal.remove();render();toast('崗位已儲存');};
-}
-
-function openVolunteerLunchModal(volunteerId=''){
-  if(!state.volunteers.length)return alert('請先新增或匯入義工。');
-  const currentId=volunteerId||state.volunteers.find(v=>!state.lunch.individual?.[v.id])?.id||state.volunteers[0].id;
-  const existing=state.lunch.individual?.[currentId]||{start:720,end:780};
-  const modal=showModal(volunteerId?'編輯義工午膳':'新增義工午膳',`<div class="form-grid"><label class="full-field">義工<select id="lVolunteer">${state.volunteers.map(v=>`<option value="${v.id}" ${v.id===currentId?'selected':''}>${esc(v.name)}｜${esc(v.center)}｜${esc(v.group)}</option>`).join('')}</select></label><label>午膳開始<input id="lStart" type="time" min="08:00" max="18:00" step="900" value="${formatTime(existing.start)}"></label><label>午膳結束<input id="lEnd" type="time" min="08:00" max="18:00" step="900" value="${formatTime(existing.end)}"></label></div><div class="hint-box">分段安排會按義工本人顯示午膳；如午膳時間落在其班次內，更表會直接在該義工班次上標示。</div><div class="modal-actions">${volunteerId?'<button class="danger-button" id="deleteVolunteerLunch">刪除午膳</button>':''}<button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveVolunteerLunch">儲存午膳</button></div>`);
-  const volunteerSelect=modal.querySelector('#lVolunteer'),startInput=modal.querySelector('#lStart'),endInput=modal.querySelector('#lEnd');
-  volunteerSelect.onchange=e=>{const l=state.lunch.individual?.[e.target.value];if(l){startInput.value=formatTime(l.start);endInput.value=formatTime(l.end);}};
-  modal.querySelector('.modal-cancel').onclick=()=>modal.remove();
-  modal.querySelector('#saveVolunteerLunch').onclick=()=>{const vid=volunteerSelect.value,st=inputTime(startInput.value),en=inputTime(endInput.value);if(en<=st)return alert('午膳結束時間必須遲於開始時間。');if(volunteerId&&volunteerId!==vid)delete state.lunch.individual[volunteerId];state.lunch.mode='staggered';state.lunch.enabled=true;state.lunch.individual[vid]={start:st,end:en};saveState();modal.remove();render();toast('義工午膳時間已儲存');};
-  modal.querySelector('#deleteVolunteerLunch')?.addEventListener('click',()=>{delete state.lunch.individual[volunteerId];saveState();modal.remove();render();toast('已刪除義工午膳時間');});
-}
-
-function openShiftModal(s,defaultPositionId,defaultStart){
-  if(!state.volunteers.length)return alert('請先新增或匯入義工。');if(!state.positions.length)return alert('請先新增崗位。');
-  const filteredPositions=activeGroupFilter==='all'?state.positions:state.positions.filter(p=>p.groupId===activeGroupFilter);
-  const positionId=s?.positionId||defaultPositionId||filteredPositions[0]?.id||state.positions[0].id,pos=state.positions.find(p=>p.id===positionId),start=s?.start??defaultStart??540;
-  const x=s||{id:'',volunteerId:state.volunteers[0].id,positionId,groupId:pos.groupId,start,end:Math.min(start+180,DAY_END)};
-  const volunteerField=s?`<label class="full-field">義工<select id="sVolunteer">${state.volunteers.map(v=>`<option value="${v.id}" ${x.volunteerId===v.id?'selected':''}>${esc(v.name)}｜${esc(v.center)}｜${esc(v.group)}</option>`).join('')}</select></label>`:`<div class="full-field multi-volunteer-field"><span>義工（可同時選擇多位）</span><div class="volunteer-multi-list">${state.volunteers.map((v,i)=>`<label><input type="checkbox" name="sVolunteers" value="${v.id}" ${i===0?'checked':''}><span><strong>${esc(v.name)}</strong><small>${esc(v.center)}｜${esc(v.group)}</small></span></label>`).join('')}</div></div>`;
-  const modal=showModal(s?'編輯班次':'新增編更',`<div class="form-grid">${volunteerField}<label class="full-field">崗位<select id="sPosition">${state.positions.map(p=>`<option value="${p.id}" ${x.positionId===p.id?'selected':''}>${esc(state.groups.find(g=>g.id===p.groupId)?.name||'')}｜${esc(p.name)}</option>`).join('')}</select></label><label>開始時間<input id="sStart" type="time" min="08:00" max="18:00" step="900" value="${formatTime(x.start)}"></label><label>結束時間<input id="sEnd" type="time" min="08:00" max="18:00" step="900" value="${formatTime(x.end)}"></label></div><div class="modal-actions"><button class="secondary-button modal-cancel">取消</button><button class="primary-button" id="saveShift">${s?'儲存班次':'建立所選義工班次'}</button></div>`,!s);
-  modal.querySelector('.modal-cancel').onclick=()=>modal.remove();
-  modal.querySelector('#saveShift').onclick=()=>{const st=inputTime(modal.querySelector('#sStart').value),en=inputTime(modal.querySelector('#sEnd').value);if(en<=st)return alert('結束時間必須遲於開始時間。');const pid=modal.querySelector('#sPosition').value,p=state.positions.find(p=>p.id===pid);if(s){const obj={...x,id:x.id,volunteerId:modal.querySelector('#sVolunteer').value,positionId:pid,groupId:p.groupId,start:st,end:en};state.shifts=state.shifts.map(i=>i.id===s.id?obj:i);selectedShiftId=obj.id;}else{const volunteerIds=[...modal.querySelectorAll('input[name="sVolunteers"]:checked')].map(i=>i.value);if(!volunteerIds.length)return alert('請至少選擇一名義工。');const created=volunteerIds.map(vid=>({id:id('s'),volunteerId:vid,positionId:pid,groupId:p.groupId,start:st,end:en}));state.shifts.push(...created);selectedShiftId=created[0].id;}saveState();modal.remove();render();toast(s?'班次已儲存':'已建立所選義工班次');};
-}
-
-function openImportModal(){
-  let parsed=[];
-  const modal=showModal('Excel 匯入義工資料',`<div class="import-toolbar"><button class="secondary-button" id="downloadTemplate">⇩ 下載 Excel/CSV 範本</button></div><div class="import-note">▤ 支援 <strong>.xlsx</strong> 及 <strong>.csv</strong>。欄位：姓名、所屬中心、所屬組別、電話、電郵、可服務開始、可服務結束。</div><div class="file-drop"><strong>選擇義工資料檔案</strong>系統會先顯示匯入預覽，不會立即寫入資料。<br><input id="importFile" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></div><div id="importStatus"></div><div id="importPreview"></div>`,true);
-  modal.querySelector('#downloadTemplate').onclick=downloadTemplateCSV;
-  modal.querySelector('#importFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;const status=modal.querySelector('#importStatus'),preview=modal.querySelector('#importPreview');status.innerHTML=`<p class="file-name">正在讀取：${esc(file.name)}…</p>`;preview.innerHTML='';try{const rows=await readSpreadsheet(file);parsed=convertVolunteers(rows);if(!parsed.length)throw new Error('找不到「姓名」欄位或沒有可匯入資料。');status.innerHTML=`<div class="preview-heading"><strong>匯入預覽</strong><span>${parsed.length} 位義工</span></div>`;preview.innerHTML=`<div class="table-wrap import-preview"><table><thead><tr><th>姓名</th><th>所屬中心</th><th>所屬組別</th><th>電話</th><th>電郵</th></tr></thead><tbody>${parsed.slice(0,10).map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(v.center||'—')}</td><td>${esc(v.group||'—')}</td><td>${esc(v.phone||'—')}</td><td>${esc(v.email||'—')}</td></tr>`).join('')}</tbody></table></div><div class="modal-actions"><button class="secondary-button modal-cancel2">取消</button><button class="primary-button" id="confirmImport">確認匯入 ${parsed.length} 位</button></div>`;preview.querySelector('.modal-cancel2').onclick=()=>modal.remove();preview.querySelector('#confirmImport').onclick=()=>{state.volunteers.push(...parsed);saveState();modal.remove();render();toast(`已匯入 ${parsed.length} 位義工`);};}catch(err){status.innerHTML=`<div class="error-box">${esc(err.message||'無法讀取檔案')}</div>`;}};
-}
-
-function downloadTemplateCSV(){
-  const rows=[['姓名','所屬中心','所屬組別','電話','電郵','可服務開始','可服務結束'],['陳大文','社區中心A','青年組','91234567','example@email.com','09:00','18:00']];
-  downloadBlob(new Blob(['\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'義工資料匯入範本.csv');
-}
-function exportScheduleCSV(){
-  const header=['日期','義工姓名','所屬中心','所屬組別','編更分組','崗位','開始時間','結束時間','服務時數'];
-  const rows=state.shifts.map(s=>{const v=state.volunteers.find(x=>x.id===s.volunteerId),p=state.positions.find(x=>x.id===s.positionId),g=state.groups.find(x=>x.id===s.groupId);return [eventDate,v?.name||'',v?.center||'',v?.group||'',g?.name||'',p?.name||'',formatTime(s.start),formatTime(s.end),hours(s.start,s.end).toFixed(2)];});
-  downloadBlob(new Blob(['\ufeff'+[header,...rows].map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),`義工更表_${eventDate}.csv`);
-}
-
+function openImportModal(){ let parsed=[];const modal=showModal('Excel 匯入義工資料',`<div class="import-toolbar"><button class="secondary-button" id="downloadTemplate">⇩ 下載 Excel/CSV 範本</button></div><div class="import-note">▤ 支援 <strong>.xlsx</strong> 及 <strong>.csv</strong>。欄位：姓名、所屬中心、所屬組別、電話、電郵、可服務開始、可服務結束。</div><div class="file-drop"><strong>選擇義工資料檔案</strong>系統會先顯示匯入預覽，不會立即寫入資料。<br><input id="importFile" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></div><div id="importStatus"></div><div id="importPreview"></div>`,true);modal.querySelector('#downloadTemplate').onclick=downloadTemplateCSV;modal.querySelector('#importFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;const status=modal.querySelector('#importStatus'),preview=modal.querySelector('#importPreview');status.innerHTML=`<p class="file-name">正在讀取：${esc(file.name)}…</p>`;preview.innerHTML='';try{const rows=await readSpreadsheet(file);parsed=convertVolunteers(rows);if(!parsed.length)throw new Error('找不到「姓名」欄位或沒有可匯入資料。');status.innerHTML=`<div class="preview-heading"><strong>匯入預覽</strong><span>${parsed.length} 位義工</span></div>`;preview.innerHTML=`<div class="table-wrap import-preview"><table><thead><tr><th>姓名</th><th>所屬中心</th><th>所屬組別</th><th>電話</th><th>電郵</th></tr></thead><tbody>${parsed.slice(0,10).map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(v.center||'—')}</td><td>${esc(v.group||'—')}</td><td>${esc(v.phone||'—')}</td><td>${esc(v.email||'—')}</td></tr>`).join('')}</tbody></table></div><div class="modal-actions"><button class="secondary-button modal-cancel2">取消</button><button class="primary-button" id="confirmImport">確認匯入 ${parsed.length} 位</button></div>`;preview.querySelector('.modal-cancel2').onclick=()=>modal.remove();preview.querySelector('#confirmImport').onclick=()=>{state.volunteers.push(...parsed);saveState();modal.remove();render();toast(`已匯入 ${parsed.length} 位義工`);};}catch(err){status.innerHTML=`<div class="error-box">${esc(err.message||'無法讀取檔案')}</div>`;}}; }
+function downloadTemplateCSV(){ const rows=[['姓名','所屬中心','所屬組別','電話','電郵','可服務開始','可服務結束'],['陳大文','東華三院','青年組','91234567','example@email.com','09:00','18:00']];downloadBlob(new Blob(['\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'義工資料匯入範本.csv'); }
 const aliases={name:['姓名','義工姓名','Name','name'],center:['所屬中心','中心','Center','center'],group:['所屬組別','組別','Group','group'],phone:['電話','聯絡電話','Phone','phone'],email:['電郵','Email','email'],availabilityStart:['可服務開始','可服務開始時間','開始時間','Available Start'],availabilityEnd:['可服務結束','可服務結束時間','結束時間','Available End']};
 function pick(row,key){const k=aliases[key].find(a=>Object.prototype.hasOwnProperty.call(row,a));return k?row[k]:'';}
 function convertVolunteers(rows){return rows.map((row,i)=>({id:id(`vimp${i}`),name:String(pick(row,'name')??'').trim(),center:String(pick(row,'center')??'').trim(),group:String(pick(row,'group')??'').trim(),phone:String(pick(row,'phone')??'').trim(),email:String(pick(row,'email')??'').trim(),availabilityStart:parseTime(pick(row,'availabilityStart'),480),availabilityEnd:parseTime(pick(row,'availabilityEnd'),1080)})).filter(v=>v.name);}
-
-async function readSpreadsheet(file){
-  const lower=file.name.toLowerCase(); if(lower.endsWith('.csv'))return parseCSV(await file.text()); if(lower.endsWith('.xlsx'))return parseXLSX(await file.arrayBuffer()); throw new Error('目前支援 .xlsx 或 .csv。舊式 .xls 請先另存為 .xlsx。');
-}
-function parseCSV(text){
-  text=text.replace(/^\ufeff/,''); const rows=[];let row=[],cell='',q=false;
-  for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'&&text[i+1]==='"'){cell+='"';i++;}else if(c==='"')q=false;else cell+=c;}else{if(c==='"')q=true;else if(c===','){row.push(cell);cell='';}else if(c==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell='';}else cell+=c;}}
-  if(cell||row.length){row.push(cell);rows.push(row);} const header=(rows.shift()||[]).map(x=>String(x).trim());return rows.filter(r=>r.some(x=>String(x).trim())).map(r=>Object.fromEntries(header.map((h,i)=>[h,r[i]??''])));
-}
-
-async function parseXLSX(buffer){
-  const files=await unzipXlsx(buffer); const decoder=new TextDecoder('utf-8');
-  const xml=name=>{const bytes=files.get(name);return bytes?decoder.decode(bytes):'';};
-  let shared=[]; const sharedXml=xml('xl/sharedStrings.xml'); if(sharedXml){const doc=new DOMParser().parseFromString(sharedXml,'application/xml');shared=[...doc.querySelectorAll('si')].map(si=>[...si.querySelectorAll('t')].map(t=>t.textContent||'').join(''));}
-  let sheetPath='xl/worksheets/sheet1.xml'; const wbXml=xml('xl/workbook.xml'),relsXml=xml('xl/_rels/workbook.xml.rels');
-  if(wbXml&&relsXml){const wb=new DOMParser().parseFromString(wbXml,'application/xml'),rels=new DOMParser().parseFromString(relsXml,'application/xml'),sheet=wb.querySelector('sheet');const rid=sheet?.getAttribute('r:id')||sheet?.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');if(rid){const rel=[...rels.querySelectorAll('Relationship')].find(r=>r.getAttribute('Id')===rid),target=rel?.getAttribute('Target');if(target)sheetPath=target.startsWith('/')?target.slice(1):`xl/${target.replace(/^\.\//,'')}`;}}
-  const sheetXml=xml(sheetPath); if(!sheetXml)throw new Error('無法讀取 Excel 第一個工作表。');
-  const doc=new DOMParser().parseFromString(sheetXml,'application/xml'),grid=[];
-  for(const c of doc.querySelectorAll('sheetData c')){const ref=c.getAttribute('r')||'',m=ref.match(/^([A-Z]+)(\d+)$/);if(!m)continue;const col=lettersToIndex(m[1]),row=Number(m[2])-1,t=c.getAttribute('t');let value='';if(t==='inlineStr')value=[...c.querySelectorAll('is t')].map(n=>n.textContent||'').join('');else{const raw=c.querySelector('v')?.textContent??'';value=t==='s'?(shared[Number(raw)]??''):raw;}if(!grid[row])grid[row]=[];grid[row][col]=value;}
-  const rows=grid.filter(Boolean);if(!rows.length)return[];const header=(rows.shift()||[]).map(x=>String(x??'').trim());return rows.filter(r=>r?.some(x=>String(x??'').trim())).map(r=>Object.fromEntries(header.map((h,i)=>[h,r?.[i]??''])));
-}
+async function readSpreadsheet(file){const lower=file.name.toLowerCase();if(lower.endsWith('.csv'))return parseCSV(await file.text());if(lower.endsWith('.xlsx'))return parseXLSX(await file.arrayBuffer());throw new Error('目前支援 .xlsx 或 .csv。舊式 .xls 請先另存為 .xlsx。');}
+function parseCSV(text){text=text.replace(/^\ufeff/,'');const rows=[];let row=[],cell='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'&&text[i+1]==='"'){cell+='"';i++;}else if(c==='"')q=false;else cell+=c;}else{if(c==='"')q=true;else if(c===','){row.push(cell);cell='';}else if(c==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell='';}else cell+=c;}}if(cell||row.length){row.push(cell);rows.push(row);}const header=(rows.shift()||[]).map(x=>String(x).trim());return rows.filter(r=>r.some(x=>String(x).trim())).map(r=>Object.fromEntries(header.map((h,i)=>[h,r[i]??''])));}
+async function parseXLSX(buffer){const files=await unzipXlsx(buffer),decoder=new TextDecoder('utf-8'),xml=name=>{const bytes=files.get(name);return bytes?decoder.decode(bytes):'';};let shared=[];const sharedXml=xml('xl/sharedStrings.xml');if(sharedXml){const doc=new DOMParser().parseFromString(sharedXml,'application/xml');shared=[...doc.querySelectorAll('si')].map(si=>[...si.querySelectorAll('t')].map(t=>t.textContent||'').join(''));}let sheetPath='xl/worksheets/sheet1.xml';const wbXml=xml('xl/workbook.xml'),relsXml=xml('xl/_rels/workbook.xml.rels');if(wbXml&&relsXml){const wb=new DOMParser().parseFromString(wbXml,'application/xml'),rels=new DOMParser().parseFromString(relsXml,'application/xml'),sheet=wb.querySelector('sheet'),rid=sheet?.getAttribute('r:id')||sheet?.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');if(rid){const rel=[...rels.querySelectorAll('Relationship')].find(r=>r.getAttribute('Id')===rid),target=rel?.getAttribute('Target');if(target)sheetPath=target.startsWith('/')?target.slice(1):`xl/${target.replace(/^\.\//,'')}`;}}const sheetXml=xml(sheetPath);if(!sheetXml)throw new Error('無法讀取 Excel 第一個工作表。');const doc=new DOMParser().parseFromString(sheetXml,'application/xml'),grid=[];for(const c of doc.querySelectorAll('sheetData c')){const ref=c.getAttribute('r')||'',m=ref.match(/^([A-Z]+)(\d+)$/);if(!m)continue;const col=lettersToIndex(m[1]),row=Number(m[2])-1,t=c.getAttribute('t');let value='';if(t==='inlineStr')value=[...c.querySelectorAll('is t')].map(n=>n.textContent||'').join('');else{const raw=c.querySelector('v')?.textContent??'';value=t==='s'?(shared[Number(raw)]??''):raw;}if(!grid[row])grid[row]=[];grid[row][col]=value;}const rows=grid.filter(Boolean);if(!rows.length)return[];const header=(rows.shift()||[]).map(x=>String(x??'').trim());return rows.filter(r=>r?.some(x=>String(x??'').trim())).map(r=>Object.fromEntries(header.map((h,i)=>[h,r?.[i]??''])));}
 function lettersToIndex(s){let n=0;for(const c of s)n=n*26+(c.charCodeAt(0)-64);return n-1;}
-async function unzipXlsx(buffer){
-  const data=new Uint8Array(buffer),view=new DataView(buffer);let eocd=-1;for(let i=data.length-22;i>=Math.max(0,data.length-65557);i--){if(view.getUint32(i,true)===0x06054b50){eocd=i;break;}}if(eocd<0)throw new Error('Excel 檔案不是有效的 XLSX 壓縮格式。');
-  const entries=view.getUint16(eocd+10,true),centralOffset=view.getUint32(eocd+16,true);let ptr=centralOffset;const files=new Map(),decoder=new TextDecoder();
-  for(let i=0;i<entries;i++){
-    if(view.getUint32(ptr,true)!==0x02014b50)break;const method=view.getUint16(ptr+10,true),compSize=view.getUint32(ptr+20,true),nameLen=view.getUint16(ptr+28,true),extraLen=view.getUint16(ptr+30,true),commentLen=view.getUint16(ptr+32,true),localOffset=view.getUint32(ptr+42,true),name=decoder.decode(data.slice(ptr+46,ptr+46+nameLen));
-    const localNameLen=view.getUint16(localOffset+26,true),localExtraLen=view.getUint16(localOffset+28,true),start=localOffset+30+localNameLen+localExtraLen,compressed=data.slice(start,start+compSize);let content;
-    if(method===0)content=compressed;else if(method===8)content=await inflateRaw(compressed);else throw new Error(`Excel 內含不支援的壓縮方式：${method}`);files.set(name,content);ptr+=46+nameLen+extraLen+commentLen;
-  }
-  return files;
-}
-async function inflateRaw(bytes){
-  if(typeof DecompressionStream==='undefined')throw new Error('此瀏覽器不支援直接讀取 XLSX，請改用最新版 Chrome / Edge，或另存為 CSV。');
-  try{const ds=new DecompressionStream('deflate-raw');const stream=new Blob([bytes]).stream().pipeThrough(ds);return new Uint8Array(await new Response(stream).arrayBuffer());}catch{throw new Error('解壓 XLSX 失敗；可嘗試將檔案另存為 CSV 後匯入。');}
-}
+async function unzipXlsx(buffer){const data=new Uint8Array(buffer),view=new DataView(buffer);let eocd=-1;for(let i=data.length-22;i>=Math.max(0,data.length-65557);i--){if(view.getUint32(i,true)===0x06054b50){eocd=i;break;}}if(eocd<0)throw new Error('Excel 檔案不是有效的 XLSX 壓縮格式。');const entries=view.getUint16(eocd+10,true),centralOffset=view.getUint32(eocd+16,true);let ptr=centralOffset;const files=new Map(),decoder=new TextDecoder();for(let i=0;i<entries;i++){if(view.getUint32(ptr,true)!==0x02014b50)break;const method=view.getUint16(ptr+10,true),compSize=view.getUint32(ptr+20,true),nameLen=view.getUint16(ptr+28,true),extraLen=view.getUint16(ptr+30,true),commentLen=view.getUint16(ptr+32,true),localOffset=view.getUint32(ptr+42,true),name=decoder.decode(data.slice(ptr+46,ptr+46+nameLen)),localNameLen=view.getUint16(localOffset+26,true),localExtraLen=view.getUint16(localOffset+28,true),start=localOffset+30+localNameLen+localExtraLen,compressed=data.slice(start,start+compSize);let content;if(method===0)content=compressed;else if(method===8)content=await inflateRaw(compressed);else throw new Error(`Excel 內含不支援的壓縮方式：${method}`);files.set(name,content);ptr+=46+nameLen+extraLen+commentLen;}return files;}
+async function inflateRaw(bytes){if(typeof DecompressionStream==='undefined')throw new Error('此瀏覽器不支援直接讀取 XLSX，請改用最新版 Chrome / Edge，或另存為 CSV。');try{const ds=new DecompressionStream('deflate-raw'),stream=new Blob([bytes]).stream().pipeThrough(ds);return new Uint8Array(await new Response(stream).arrayBuffer());}catch{throw new Error('解壓 XLSX 失敗；可嘗試將檔案另存為 CSV 後匯入。');}}
 
 render();
