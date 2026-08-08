@@ -1,0 +1,12 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.2/+esm'
+
+export const SUPABASE_URL = 'https://jciqwdzuptvmwdmmqdaj.supabase.co'
+export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_VZdOOyGaNKtAr0H_8OBU_A_f8QbH8vF'
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+})

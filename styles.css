@@ -74,3 +74,39 @@
 .volunteer-management-page{display:grid;gap:12px}.volunteer-summary-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.volunteer-summary-strip>div{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:0 3px 10px rgba(29,55,96,.025)}.volunteer-summary-strip span{display:block;font-size:9px;color:#7d8b9e}.volunteer-summary-strip strong{display:block;margin-top:5px;font-size:22px;color:#244567}.volunteer-control-panel{background:#fff;border:1px solid var(--border);border-radius:11px;padding:11px;box-shadow:0 4px 14px rgba(29,55,96,.03)}.volunteer-search-row,.volunteer-filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.volunteer-search-row{margin-bottom:9px}.volunteer-search-row .search-box{margin-right:auto}.volunteer-filter-row{border-top:1px solid #edf1f5;padding-top:9px}.volunteer-filter-row label{display:flex;align-items:center;gap:6px;font-size:9px;color:#6d7e93;font-weight:700}.volunteer-filter-row select{border:1px solid #d8e1ec;border-radius:7px;background:#fff;color:#3e5673;padding:7px 9px;font-size:9px}.filter-spacer{flex:1}.danger-button:disabled{opacity:.42;cursor:not-allowed}.select-cell{width:34px;text-align:center!important}.select-cell input{width:15px;height:15px;accent-color:#2f80ed}.volunteer-table td{vertical-align:middle}.availability-detail,.emergency-detail{display:block;margin-top:4px;color:#8190a3;font-size:8px;line-height:1.35}.mode-badge{display:inline-block;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:750;white-space:nowrap}.mode-badge.flexible{background:#eaf3ff;color:#2769b8}.mode-badge.fixed{background:#edf7f0;color:#278154}.mode-badge.mixed{background:#fff4e9;color:#b4681d}.volunteer-grouped-view{display:grid;gap:12px}.volunteer-group-section{background:#f9fbfd;border:1px solid #e2e8f0;border-radius:12px;padding:10px}.volunteer-group-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 2px 9px}.volunteer-group-head strong{display:block;color:#2e4869;font-size:13px}.volunteer-group-head small{display:block;margin-top:2px;color:#8795a7;font-size:9px}.empty-table{padding:28px;text-align:center;color:#8391a4;font-size:11px}.compact{padding:7px 9px!important;font-size:9px!important}.hint-box strong{color:#4b6380}.import-preview small{color:#8291a5}.volunteer-table-wrap{box-shadow:0 3px 10px rgba(29,55,96,.02)}
 @media(max-width:980px){.volunteer-summary-strip{grid-template-columns:repeat(3,1fr)}.volunteer-search-row .search-box{width:100%;flex-basis:100%}.volunteer-filter-row{align-items:flex-start}.volunteer-table-wrap{min-width:900px}}
 @media(max-width:640px){.volunteer-summary-strip{grid-template-columns:repeat(2,1fr)}.volunteer-control-panel{min-width:760px}.volunteer-grouped-view,.volunteer-table-wrap{min-width:900px}}
+
+/* v1.6 Supabase cloud + admin mode */
+.auth-shell{min-height:100vh;display:grid;place-items:center;background:linear-gradient(145deg,#eef4fb 0%,#f8fbff 55%,#eef6f2 100%);padding:24px}
+.auth-card{width:min(440px,100%);background:#fff;border:1px solid #dce6f2;border-radius:20px;box-shadow:0 24px 60px rgba(25,54,88,.14);padding:30px}
+.auth-loading{text-align:center}
+.auth-brand{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.auth-brand h1,.auth-card h1{margin:0;color:#18385f;font-size:28px;line-height:1.2}
+.auth-brand p,.auth-card>p{margin:5px 0 0;color:#718198;font-size:14px}
+.auth-brand-mark{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#17345f;color:white;font-size:24px;box-shadow:0 10px 24px rgba(23,52,95,.2)}
+.auth-form{display:grid;gap:16px}
+.auth-form label{display:grid;gap:7px;font-size:13px;font-weight:700;color:#40536d}
+.auth-form input{width:100%;height:44px;border:1px solid #cfdbea;border-radius:10px;padding:0 12px;font:inherit;color:#263d5b;background:#fff;box-sizing:border-box}
+.auth-form input:focus{outline:2px solid rgba(47,128,237,.18);border-color:#2f80ed}
+.auth-submit{width:100%;justify-content:center;height:46px;margin-top:4px}
+.auth-submit:disabled{opacity:.6;cursor:wait}
+.auth-help{margin:0;color:#7b8899;font-size:12px;line-height:1.6;text-align:center}
+.auth-message{background:#eef6ff;border:1px solid #cfe2fb;color:#315b88;border-radius:10px;padding:11px 12px;margin:0 0 18px;font-size:13px}
+.auth-error{background:#fff1f2;border:1px solid #f6c9cf;color:#a63c4d;border-radius:10px;padding:10px 12px;font-size:13px}
+.auth-spinner{width:30px;height:30px;border-radius:50%;border:3px solid #dbe7f4;border-top-color:#2f80ed;margin:24px auto 0;animation:authSpin .8s linear infinite}
+@keyframes authSpin{to{transform:rotate(360deg)}}
+.cloud-status{display:inline-flex;align-items:center;white-space:nowrap;border:1px solid #d7e1ed;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;background:#fff;color:#60728a}
+.cloud-status.synced{background:#edf8f1;border-color:#c9ead4;color:#287345}
+.cloud-status.syncing,.cloud-status.connecting{background:#eef5ff;border-color:#cfe0fa;color:#356aaf}
+.cloud-status.error{background:#fff1f2;border-color:#f2c7ce;color:#a93b4c}
+.admin-box{border-top:1px solid rgba(255,255,255,.13);padding:16px 14px 12px;display:grid;gap:3px;color:#dbe8f8}
+.admin-box .admin-mode-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#86a7cf;font-weight:800}
+.admin-box strong{font-size:13px;color:#fff}
+.admin-box small{font-size:11px;color:#a8bfdc;overflow:hidden;text-overflow:ellipsis}
+.sidebar-logout{margin-top:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer;text-align:left}
+.sidebar-logout:hover{background:rgba(255,255,255,.13)}
+.cloud-sidebar b{font-weight:600;color:#c4d7ec}
+.settings-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.settings-title-row h2{margin-top:0}
+.settings-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.cloud-settings{border-color:#cfe1f5}
+@media(max-width:760px){.auth-shell{padding:14px}.auth-card{padding:22px;border-radius:16px}.top-actions .cloud-status{display:none}.settings-title-row{display:block}.settings-title-row .cloud-status{margin-top:10px}}

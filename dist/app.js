@@ -1,3 +1,5 @@
+import { supabase, SUPABASE_URL } from './supabase-config.js';
+
 const STEP = 15;
 const GROUP_HEIGHT = 34;
 const ROW_HEIGHT = 58;
@@ -70,6 +72,16 @@ let statsSelection = '';
 let activeGroupFilter = 'all';
 let unassignedSearch = '';
 const app = document.getElementById('app');
+const WORKSPACE_ID = 'main';
+let authSession = null;
+let currentAdmin = null;
+let cloudReady = false;
+let cloudRevision = 0;
+let cloudSaveTimer = null;
+let cloudSaving = false;
+let cloudSavePending = false;
+let cloudStatus = 'connecting';
+let cloudStatusText = '連接雲端中';
 
 function clone(v){ return JSON.parse(JSON.stringify(v)); }
 function id(prefix){ return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`; }
@@ -153,7 +165,89 @@ function normalizeState(data){
   if(!next.activeEventId||!next.events.some(e=>e.id===next.activeEventId))next.activeEventId=next.events[0].id;
   return {volunteers:next.volunteers,events:next.events,activeEventId:next.activeEventId};
 }
-function saveState(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+function saveState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  if(cloudReady&&currentAdmin)scheduleCloudSave();
+}
+function cloudStatusLabel(){
+  if(cloudStatus==='synced')return '● 雲端已同步';
+  if(cloudStatus==='syncing')return '● 同步中';
+  if(cloudStatus==='error')return '● 同步失敗';
+  return '● 連接中';
+}
+function setCloudStatus(status,text=''){
+  cloudStatus=status;cloudStatusText=text||cloudStatusLabel().replace(/^●\s*/,'');
+  const el=document.getElementById('cloudStatus');
+  if(el){el.className=`cloud-status ${status}`;el.textContent=cloudStatusLabel();el.title=cloudStatusText;}
+}
+function scheduleCloudSave(delay=450){
+  clearTimeout(cloudSaveTimer);setCloudStatus('syncing','正在將最新資料儲存至 Supabase');
+  cloudSaveTimer=setTimeout(()=>flushCloudSave(),delay);
+}
+async function flushCloudSave(showToast=false){
+  clearTimeout(cloudSaveTimer);cloudSaveTimer=null;
+  if(!cloudReady||!currentAdmin||!authSession)return false;
+  if(cloudSaving){cloudSavePending=true;return false;}
+  cloudSaving=true;setCloudStatus('syncing','正在同步雲端資料');
+  const snapshot=clone(state),nextRevision=Math.max(1,cloudRevision+1);
+  try{
+    const {data,error}=await supabase.from('volunteer_roster_state').upsert({workspace_id:WORKSPACE_ID,data:snapshot,revision:nextRevision,updated_at:new Date().toISOString(),updated_by:authSession.user.id},{onConflict:'workspace_id'}).select('revision,updated_at').single();
+    if(error)throw error;
+    cloudRevision=Number(data?.revision||nextRevision);localStorage.setItem(STORAGE_KEY,JSON.stringify(snapshot));setCloudStatus('synced',`已同步至 Supabase｜版本 ${cloudRevision}`);
+    if(showToast)toast('已同步到雲端');
+    return true;
+  }catch(err){console.error('Cloud save failed',err);setCloudStatus('error',err?.message||'雲端同步失敗，已保留本機備份');if(showToast)alert(`雲端儲存失敗：${err?.message||'未知錯誤'}
+本機備份仍然保留。`);return false;}
+  finally{cloudSaving=false;if(cloudSavePending){cloudSavePending=false;scheduleCloudSave(80);}}
+}
+async function recordAudit(action,entityType='',entityId='',details={}){
+  if(!authSession||!currentAdmin)return;
+  try{await supabase.from('volunteer_roster_audit_logs').insert({user_id:authSession.user.id,action,entity_type:entityType||null,entity_id:entityId||null,details});}catch(err){console.warn('Audit log failed',err);}
+}
+function renderAuthLoading(){
+  app.innerHTML=`<div class="auth-shell"><div class="auth-card auth-loading"><div class="auth-brand-mark">♥</div><h1>義工編更系統</h1><p>正在連接 Supabase 雲端資料…</p><div class="auth-spinner"></div></div></div>`;
+}
+function renderLogin(message=''){
+  currentAdmin=null;cloudReady=false;setCloudStatus('connecting','尚未登入');
+  app.innerHTML=`<div class="auth-shell"><div class="auth-card"><div class="auth-brand"><div class="auth-brand-mark">♥</div><div><h1>義工編更系統</h1><p>Supabase 雲端管理員模式</p></div></div>${message?`<div class="auth-message">${esc(message)}</div>`:''}<form id="adminLoginForm" class="auth-form"><label>管理員電郵<input id="adminEmail" type="email" autocomplete="username" required placeholder="name@example.com"></label><label>密碼<input id="adminPassword" type="password" autocomplete="current-password" required placeholder="輸入 Supabase 帳戶密碼"></label><button class="primary-button auth-submit" type="submit">登入管理員模式</button><p class="auth-help">只有已獲授權的管理員帳戶可以存取義工、緊急聯絡資料及更表。登入後所有修改會自動同步至 Supabase。</p><div id="authError"></div></form></div></div>`;
+  document.getElementById('adminLoginForm')?.addEventListener('submit',handleAdminLogin);
+}
+async function handleAdminLogin(e){
+  e.preventDefault();const button=e.currentTarget.querySelector('button'),errorEl=document.getElementById('authError');button.disabled=true;button.textContent='登入中…';errorEl.textContent='';
+  const email=document.getElementById('adminEmail').value.trim(),password=document.getElementById('adminPassword').value;
+  const {data,error}=await supabase.auth.signInWithPassword({email,password});
+  if(error||!data.session){errorEl.innerHTML=`<div class="auth-error">電郵或密碼不正確，請再試一次。</div>`;button.disabled=false;button.textContent='登入管理員模式';return;}
+  await activateAdminSession(data.session);
+}
+async function activateAdminSession(session){
+  authSession=session;renderAuthLoading();
+  const {data:admin,error}=await supabase.from('volunteer_roster_admins').select('user_id,display_name,is_active').eq('user_id',session.user.id).maybeSingle();
+  if(error||!admin?.is_active){await supabase.auth.signOut();authSession=null;renderLogin('此帳戶未獲義工編更系統管理員權限。');return;}
+  currentAdmin=admin;await loadCloudWorkspace();
+}
+async function loadCloudWorkspace(){
+  setCloudStatus('connecting','正在讀取 Supabase 資料');
+  const {data,error}=await supabase.from('volunteer_roster_state').select('data,revision,updated_at').eq('workspace_id',WORKSPACE_ID).maybeSingle();
+  const queryError=error;
+  if(queryError){console.error(queryError);renderLogin(`無法讀取雲端資料：${queryError.message||'連線失敗'}`);return;}
+  if(data?.data&&typeof data.data==='object'&&(Array.isArray(data.data.events)||Array.isArray(data.data.volunteers))){
+    state=normalizeState(data.data);cloudRevision=Number(data.revision||0);cloudReady=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(state));setCloudStatus('synced',`雲端資料已載入｜版本 ${cloudRevision}`);view='events';render();return;
+  }
+  state=normalizeState(loadState());cloudRevision=0;cloudReady=true;await flushCloudSave(false);await recordAudit('bootstrap','workspace',WORKSPACE_ID,{source:localStorage.getItem(STORAGE_KEY)?'local_backup':'seed'});view='events';render();toast('已將原有資料建立為 Supabase 雲端資料');
+}
+async function reloadCloudWorkspace(){
+  if(!currentAdmin)return;setCloudStatus('connecting','正在重新載入雲端資料');
+  const {data,error}=await supabase.from('volunteer_roster_state').select('data,revision').eq('workspace_id',WORKSPACE_ID).single();
+  if(error)return alert(`重新載入失敗：${error.message}`);
+  state=normalizeState(data.data);cloudRevision=Number(data.revision||0);localStorage.setItem(STORAGE_KEY,JSON.stringify(state));setCloudStatus('synced',`已重新載入｜版本 ${cloudRevision}`);view='events';render();toast('已重新載入雲端資料');
+}
+async function logoutAdmin(){
+  if(cloudReady)await flushCloudSave(false);await supabase.auth.signOut();authSession=null;currentAdmin=null;cloudReady=false;renderLogin('已安全登出管理員模式。');
+}
+async function bootstrapApp(){
+  renderAuthLoading();
+  try{const {data,error}=await supabase.auth.getSession();if(error)throw error;if(data.session)await activateAdminSession(data.session);else renderLogin();}catch(err){console.error(err);renderLogin('無法連接 Supabase，請檢查網絡後重新整理。');}
+}
 function currentEvent(){ return state.events.find(e=>e.id===state.activeEventId)||state.events[0]||null; }
 function currentEventDate(evt=currentEvent()){ return evt?.activeDate||evt?.dates?.[0]||evt?.date||''; }
 function syncEventDayState(evt=currentEvent()){
@@ -192,8 +286,9 @@ function topActionsHTML(){
   return `<button class="primary-button" id="topSave">▣ 儲存變更</button>`;
 }
 function render(){
+  if(!currentAdmin)return renderLogin();
   const [title,subtitle]=viewTitle();
-  app.innerHTML=`<div class="app-shell">${sidebarHTML()}<main class="main-area"><header class="topbar"><div><h1>${esc(title)}</h1><p>${esc(subtitle)}</p></div><div class="top-actions">${topActionsHTML()}</div></header>${renderContent()}</main></div>`;
+  app.innerHTML=`<div class="app-shell">${sidebarHTML()}<main class="main-area"><header class="topbar"><div><h1>${esc(title)}</h1><p>${esc(subtitle)}</p></div><div class="top-actions"><span id="cloudStatus" class="cloud-status ${cloudStatus}" title="${esc(cloudStatusText)}">${cloudStatusLabel()}</span>${topActionsHTML()}</div></header>${renderContent()}</main></div>`;
   bindBase();
   if(view==='events')bindEventsPage();
   if(view==='schedule')bindSchedule();
@@ -203,7 +298,7 @@ function render(){
 }
 function sidebarHTML(){
   const items=[['events','▦','活動'],['volunteers','♙','義工管理'],['stats','▥','專屬更表'],['settings','⚙','設定']];
-  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">♥</div><div><strong>義工編更系統</strong><span>Volunteer Roster</span></div></div><nav>${items.map(([key,icon,label])=>`<button class="nav-item ${view===key?'active':''}" data-nav="${key}"><b>${icon}</b><span>${label}</span></button>`).join('')}</nav><div class="sidebar-spacer"></div><div class="sidebar-status">◷ <span>活動、義工及更表儲存於此瀏覽器<br>支援 GitHub / Vercel</span></div></aside>`;
+  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">♥</div><div><strong>義工編更系統</strong><span>Volunteer Roster</span></div></div><nav>${items.map(([key,icon,label])=>`<button class="nav-item ${view===key?'active':''}" data-nav="${key}"><b>${icon}</b><span>${label}</span></button>`).join('')}</nav><div class="sidebar-spacer"></div><div class="admin-box"><span class="admin-mode-label">管理員模式</span><strong>${esc(currentAdmin?.display_name||'管理員')}</strong><small>${esc(authSession?.user?.email||'')}</small><button id="logoutAdmin" class="sidebar-logout">登出</button></div><div class="sidebar-status cloud-sidebar">☁ <span>Supabase 雲端儲存<br><b>${esc(SUPABASE_URL.replace('https://',''))}</b></span></div></aside>`;
 }
 function renderContent(){ if(view==='events')return eventsPageHTML();if(view==='schedule')return schedulePageHTML();if(view==='volunteers')return volunteerPageHTML();if(view==='stats')return `<div class="content-page">${statsPanelHTML()}</div>`;return settingsHTML(); }
 function bindBase(){
@@ -212,7 +307,8 @@ function bindBase(){
   document.getElementById('topAddEvent')?.addEventListener('click',()=>openEventModal());
   document.getElementById('topEditEvent')?.addEventListener('click',()=>openEventModal(currentEvent()));
   document.getElementById('topAddVolunteer')?.addEventListener('click',()=>openVolunteerModal());
-  document.getElementById('topSave')?.addEventListener('click',()=>{saveState();toast('已儲存最新資料');});
+  document.getElementById('topSave')?.addEventListener('click',async()=>{saveState();await flushCloudSave(true);});
+  document.getElementById('logoutAdmin')?.addEventListener('click',()=>logoutAdmin());
   document.getElementById('backEvents')?.addEventListener('click',()=>{view='events';render();});
   document.getElementById('backSchedule')?.addEventListener('click',()=>{view='schedule';render();});
 }
@@ -239,7 +335,7 @@ function bindEventsPage(){
 function deleteEvent(eventId){
   const evt=state.events.find(e=>e.id===eventId);if(!evt)return;
   if(!confirm(`確定刪除「${evt.name}」？活動內所有分組、崗位、班次及午膳設定會一併刪除。`))return;
-  state.events=state.events.filter(e=>e.id!==eventId);if(!state.events.length)state.activeEventId='';else if(state.activeEventId===eventId)state.activeEventId=state.events[0].id;saveState();render();toast('活動已刪除');
+  recordAudit('delete','event',eventId,{name:evt.name});state.events=state.events.filter(e=>e.id!==eventId);if(!state.events.length)state.activeEventId='';else if(state.activeEventId===eventId)state.activeEventId=state.events[0].id;saveState();render();toast('活動已刪除');
 }
 
 function allocateLanes(positionId){
@@ -411,8 +507,12 @@ function volunteerSpreadsheetXml(list,title='義工名單'){
 }
 function downloadVolunteerListExcel(){const list=volunteerFilteredList();downloadBlob(new Blob(['\ufeff'+volunteerSpreadsheetXml(list,'義工名單')],{type:'application/vnd.ms-excel;charset=utf-8'}),`義工名單_${new Date().toISOString().slice(0,10)}.xls`);toast(`已輸出 ${list.length} 位義工`);}
 
-function settingsHTML(){ return `<div class="content-page settings-stack"><section class="panel"><h2>活動資料架構</h2><p>每個活動可包含多個日期；所有日期共用分組、崗位、義工名單及固定更期設定，各日班次及午膳安排獨立儲存。</p><div class="mini-summary"><span>活動：${state.events.length} 個</span><span>義工：${state.volunteers.length} 人</span></div></section><section class="panel danger-panel"><h2>重設示範資料</h2><p>重設會清除目前瀏覽器儲存的活動、義工及更表，恢復初始示範資料。</p><button class="danger-button" id="resetData">重設全部資料</button></section></div>`; }
-function bindSettings(){ document.getElementById('resetData')?.addEventListener('click',()=>{if(confirm('確定重設全部資料？此操作不可還原。')){state=normalizeState(clone(seed));selectedShiftId=currentEvent()?.shifts?.[0]?.id||'';activeGroupFilter='all';localStorage.removeItem(STORAGE_KEY);view='events';render();toast('已重設示範資料');}}); }
+function settingsHTML(){ return `<div class="content-page settings-stack"><section class="panel cloud-settings"><div class="settings-title-row"><div><h2>☁ Supabase 雲端儲存</h2><p>目前所有活動、義工、緊急聯絡資料及更表均由管理員帳戶透過 RLS 保護後儲存於 Supabase。</p></div><span class="cloud-status ${cloudStatus}">${cloudStatusLabel()}</span></div><div class="mini-summary"><span>管理員：${esc(currentAdmin?.display_name||'管理員')}</span><span>雲端版本：${cloudRevision}</span><span>活動：${state.events.length} 個</span><span>義工：${state.volunteers.length} 人</span></div><div class="settings-actions"><button class="primary-button" id="syncCloudNow">立即同步</button><button class="secondary-button" id="reloadCloud">從雲端重新載入</button></div></section><section class="panel"><h2>活動資料架構</h2><p>每個活動可包含多個日期；所有日期共用分組、崗位、義工名單及固定更期設定，各日班次及午膳安排獨立儲存。</p></section><section class="panel danger-panel"><h2>重設雲端示範資料</h2><p>此操作會將目前 Supabase 雲端工作區重設為初始示範資料，所有管理員裝置都會見到更新後的內容。</p><button class="danger-button" id="resetData">重設全部資料</button></section></div>`; }
+function bindSettings(){
+  document.getElementById('syncCloudNow')?.addEventListener('click',async()=>{saveState();await flushCloudSave(true);});
+  document.getElementById('reloadCloud')?.addEventListener('click',()=>{if(confirm('從雲端重新載入會放棄尚未同步的本機變更，確定繼續？'))reloadCloudWorkspace();});
+  document.getElementById('resetData')?.addEventListener('click',()=>{if(confirm('確定重設全部雲端資料？此操作會影響所有管理員裝置，且不可還原。')){state=normalizeState(clone(seed));selectedShiftId=currentEvent()?.shifts?.[0]?.id||'';activeGroupFilter='all';saveState();recordAudit('reset','workspace',WORKSPACE_ID,{});view='events';render();toast('已重設資料，正在同步至雲端');}});
+}
 
 function showModal(title,body,wide=false){ document.querySelector('.modal-backdrop')?.remove();const wrap=document.createElement('div');wrap.className='modal-backdrop';wrap.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true"><div class="modal-header"><h2>${esc(title)}</h2><button class="icon-button modal-close">×</button></div><div class="modal-body">${body}</div></div>`;document.body.appendChild(wrap);wrap.addEventListener('mousedown',e=>{if(e.target===wrap)wrap.remove();});wrap.querySelector('.modal-close').addEventListener('click',()=>wrap.remove());return wrap; }
 function openEventModal(evt){
@@ -428,7 +528,7 @@ function openEventModal(evt){
   modal.querySelectorAll('input[name="scheduleMode"]').forEach(r=>r.addEventListener('change',()=>{draft.scheduleMode=r.value;renderTemplates();}));modal.querySelector('#addEventDate').onclick=()=>{const d=modal.querySelector('#eDateAdd').value;if(!d)return alert('請先選擇日期。');if(!draft.dates.includes(d))draft.dates.push(d);draft.dates.sort();renderDates();};
   modal.querySelector('#builderAddGroup').onclick=()=>{draft.groups.push({id:id('g'),name:`${String.fromCharCode(65+draft.groups.length)}組`,color:COLORS[draft.groups.length%COLORS.length]});renderBuilder();};renderDates();renderTemplates();renderBuilder();modal.querySelector('.modal-cancel').onclick=()=>modal.remove();modal.querySelector('#saveEvent').onclick=()=>{const name=modal.querySelector('#eName').value.trim(),start=inputTime(modal.querySelector('#eStart').value),end=inputTime(modal.querySelector('#eEnd').value);if(!name)return alert('請輸入活動名稱。');if(!draft.dates.length)return alert('請至少加入一個活動日期。');if(end<=start)return alert('活動結束時間必須遲於開始時間。');if(!draft.groups.length)return alert('請至少新增一個分組。');if(!draft.positions.length)return alert('請至少在分組下新增一個崗位。');if(draft.groups.some(g=>!g.name.trim()))return alert('請填寫所有分組名稱。');if(draft.positions.some(p=>!p.name.trim()))return alert('請填寫所有崗位名稱。');if(draft.scheduleMode!=='flexible'&&!draft.shiftTemplates.length)return alert('固定時段／混合模式請至少新增一個固定更期。');if(draft.shiftTemplates.some(t=>!String(t.name).trim()||t.end<=t.start||t.start<start||t.end>end))return alert('請檢查固定更期名稱及時間，所有更期必須位於活動時間內。');
     draft.name=name;draft.dates=[...new Set(draft.dates)].sort();draft.date=draft.dates[0];draft.activeDate=draft.dates.includes(draft.activeDate)?draft.activeDate:draft.dates[0];draft.start=start;draft.end=end;draft.scheduleMode=modal.querySelector('input[name="scheduleMode"]:checked')?.value||draft.scheduleMode;draft.shiftTemplates=draft.scheduleMode==='flexible'?draft.shiftTemplates:draft.shiftTemplates.map(t=>({...t,name:String(t.name).trim(),start:clamp(t.start,start,end-15),end:clamp(t.end,start+15,end)}));draft.groups.forEach((g,i)=>{g.name=g.name.trim();g.color=g.color||COLORS[i%COLORS.length];});draft.positions.forEach(p=>{p.name=p.name.trim();p.required=Math.max(1,Number(p.required)||1);p.color=draft.groups.find(g=>g.id===p.groupId)?.color||p.color||COLORS[0];});const validP=new Set(draft.positions.map(p=>p.id)),validG=new Set(draft.groups.map(g=>g.id)),validDates=new Set(draft.dates),validTemplates=new Set(draft.shiftTemplates.map(t=>t.id));draft.shifts=(draft.shifts||[]).filter(s=>validP.has(s.positionId)&&validG.has(s.groupId)&&validDates.has(s.date||draft.date)).map(s=>({...s,date:s.date||draft.date,start:clamp(s.start,start,end-15),end:clamp(s.end,start+15,end),templateId:validTemplates.has(s.templateId)?s.templateId:''})).filter(s=>s.end>s.start);draft.lunchByDate=draft.lunchByDate||{};const fallbackLunch=draft.lunch||{enabled:true,mode:'uniform',start:720,end:780,individual:{}};for(const d of draft.dates){const prev=draft.lunchByDate[d]||clone(fallbackLunch);draft.lunchByDate[d]={...prev,enabled:prev.enabled!==false,mode:prev.mode||'uniform',start:clamp(prev.start??720,start,end-15),end:clamp(prev.end??780,start+15,end),individual:prev.individual||{}};}Object.keys(draft.lunchByDate).forEach(d=>{if(!validDates.has(d))delete draft.lunchByDate[d];});draft.lunch=draft.lunchByDate[draft.activeDate];
-    if(evt){state.events=state.events.map(e=>e.id===evt.id?{...draft,id:evt.id}:e);state.activeEventId=evt.id;}else{draft.id=id('event');state.events.push(draft);state.activeEventId=draft.id;}syncEventDayState(currentEvent());saveState();modal.remove();activeGroupFilter='all';unassignedSearch='';selectedShiftId=currentDayShifts()[0]?.id||'';view='schedule';render();toast(evt?'活動設定已更新':'活動已建立');};
+    if(evt){state.events=state.events.map(e=>e.id===evt.id?{...draft,id:evt.id}:e);state.activeEventId=evt.id;recordAudit('update','event',evt.id,{name});}else{draft.id=id('event');state.events.push(draft);state.activeEventId=draft.id;recordAudit('create','event',draft.id,{name});}syncEventDayState(currentEvent());saveState();modal.remove();activeGroupFilter='all';unassignedSearch='';selectedShiftId=currentDayShifts()[0]?.id||'';view='schedule';render();toast(evt?'活動設定已更新':'活動已建立');};
 }
 function openVolunteerModal(v){
   const x=normalizeVolunteer(v||{id:'',name:'',center:'',group:'',phone:'',emergencyContact:'',emergencyRelation:'',emergencyPhone:'',availabilityMode:'flexible',fixedShiftNames:[],availabilityStart:540,availabilityEnd:1080});
@@ -454,4 +554,4 @@ function lettersToIndex(s){let n=0;for(const c of s)n=n*26+(c.charCodeAt(0)-64);
 async function unzipXlsx(buffer){const data=new Uint8Array(buffer),view=new DataView(buffer);let eocd=-1;for(let i=data.length-22;i>=Math.max(0,data.length-65557);i--){if(view.getUint32(i,true)===0x06054b50){eocd=i;break;}}if(eocd<0)throw new Error('Excel 檔案不是有效的 XLSX 壓縮格式。');const entries=view.getUint16(eocd+10,true),centralOffset=view.getUint32(eocd+16,true);let ptr=centralOffset;const files=new Map(),decoder=new TextDecoder();for(let i=0;i<entries;i++){if(view.getUint32(ptr,true)!==0x02014b50)break;const method=view.getUint16(ptr+10,true),compSize=view.getUint32(ptr+20,true),nameLen=view.getUint16(ptr+28,true),extraLen=view.getUint16(ptr+30,true),commentLen=view.getUint16(ptr+32,true),localOffset=view.getUint32(ptr+42,true),name=decoder.decode(data.slice(ptr+46,ptr+46+nameLen)),localNameLen=view.getUint16(localOffset+26,true),localExtraLen=view.getUint16(localOffset+28,true),start=localOffset+30+localNameLen+localExtraLen,compressed=data.slice(start,start+compSize);let content;if(method===0)content=compressed;else if(method===8)content=await inflateRaw(compressed);else throw new Error(`Excel 內含不支援的壓縮方式：${method}`);files.set(name,content);ptr+=46+nameLen+extraLen+commentLen;}return files;}
 async function inflateRaw(bytes){if(typeof DecompressionStream==='undefined')throw new Error('此瀏覽器不支援直接讀取 XLSX，請改用最新版 Chrome / Edge，或另存為 CSV。');try{const ds=new DecompressionStream('deflate-raw'),stream=new Blob([bytes]).stream().pipeThrough(ds);return new Uint8Array(await new Response(stream).arrayBuffer());}catch{throw new Error('解壓 XLSX 失敗；可嘗試將檔案另存為 CSV 後匯入。');}}
 
-render();
+bootstrapApp();

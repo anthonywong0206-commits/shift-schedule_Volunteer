@@ -1,18 +1,54 @@
-# 義工編更系統 v1.5
+# 義工編更系統 v1.6
 
-可直接部署到 GitHub Pages 或 Vercel 的靜態義工編更網站。
+可直接部署到 GitHub Pages 或 Vercel 的靜態義工編更網站。v1.6 已由單機 `localStorage` 升級為 **Supabase 雲端儲存＋管理員登入模式**。
 
-## v1.5 重點
-- 主頁以「活動」為核心：新增、管理、修改、刪除活動。
-- 新增活動支援自訂多個日期；同一活動的所有日期共用分組、崗位及義工名單。
-- 進入活動後以 Day 1 / Day 2 / … 日期按鈕切換，每日班次及午膳設定獨立儲存。
-- 新增活動時設定一個或多個日期、每日活動時間、名稱、分組、崗位及所需人數。
-- 分組與崗位整合：先新增分組，再於組內新增崗位；刪除會連同相關班次級聯移除。
-- 更表班次顯示 `姓名（所屬中心）`，並保留多人同時段、自動增高、拖動與伸縮。
-- 午膳支援統一時段及逐名義工分段安排。
-- 專屬更表改為個人／所屬中心／所屬組別，可直接下載 Excel (.xls) 及 PDF。
-- 義工資料繼續支援 .xlsx / .csv 匯入。
-- v1.2 舊版單日活動會自動遷移成一個只有一日的多日活動資料結構，保留原有班次。
+## v1.6 新增
+- Supabase Auth 管理員登入；未登入或未獲授權帳戶不能讀取義工及更表資料。
+- Supabase Postgres 雲端儲存，活動、義工、緊急聯絡資料、更表及午膳安排可跨裝置同步。
+- RLS（Row Level Security）已在 Supabase 端設定，瀏覽器只使用公開的 publishable key，**沒有放置 service role / secret key**。
+- 管理員登入後可新增、修改及刪除活動／更表，修改會自動同步。
+- 側欄顯示管理員模式及登出；頂部顯示「同步中／雲端已同步／同步失敗」。
+- 設定頁可「立即同步」或「從雲端重新載入」。
+- 第一次登入時：如果 Supabase 尚未有雲端工作區，系統會將同一網站來源的 v1.5 本機資料自動建立成第一份雲端資料；否則使用現有雲端資料。
+- 瀏覽器仍保留一份 localStorage 備份，用作網絡短暫失敗時的本機保護，但 Supabase 是正式資料來源。
+
+## 原有功能保留
+- 多日活動；共用分組、崗位及義工名單，每日班次／午膳獨立。
+- 固定時段、浮動時段、混合模式及自訂固定更期。
+- 編更頁左側未編配義工拖拉到崗位。
+- 多人同時段、自動增高、拖動及伸縮班次。
+- 統一／分段午膳，午膳在時間軸以紅色顯示。
+- 義工批量刪除、篩選、按中心／組別分組。
+- Excel/CSV 批量匯入義工及固定／混合可服務時段。
+- 緊急聯絡人、關係及電話。
+- 義工名單輸出、個人／中心／組別專屬更表 Excel / PDF。
+
+## Supabase 連線
+網站已連接到已設定的 Supabase project。`supabase-config.js` 只包含 Project URL 及 **publishable key**；publishable key 本來就是供瀏覽器使用，真正資料存取權限由 Auth + RLS 控制。
+
+Supabase 使用的獨立資料表：
+- `volunteer_roster_admins`
+- `volunteer_roster_state`
+- `volunteer_roster_audit_logs`
+
+請不要把 Supabase `service_role` / secret key 放入 GitHub 或前端檔案。
+
+## 部署到 GitHub / Vercel
+你只需要將這個版本的檔案更新到原本 GitHub repository。
+
+### Vercel
+`vercel.json` 已設定 build command 及 `dist` 輸出；GitHub 更新後 Vercel 可照原本流程自動重新部署。
+
+### GitHub Pages
+執行：
+```bash
+npm run build
+```
+然後發布 `dist/`。`dist/` 會包含：
+- `index.html`
+- `styles.css`
+- `app.js`
+- `supabase-config.js`
 
 ## 本機預覽
 ```bash
@@ -21,26 +57,4 @@ npm run preview
 ```
 然後開啟 `http://localhost:4173`。
 
-## Vercel
-將整個資料夾推到 GitHub，再於 Vercel Import Project。`vercel.json` 已設定 build command 及 `dist` 輸出。
-
-## GitHub Pages
-執行 `npm run build` 後，可將 `dist/` 內容發布到 GitHub Pages；相對路徑可直接運作。
-
-## 資料儲存
-目前版本使用瀏覽器 localStorage，適合單機／單一管理員原型。不同裝置不會自動同步。
-
-
-## v1.5 更新
-- 編更頁左側改為當日未編配崗位義工名單，可直接拖到更表崗位。
-- 活動支援固定時段、浮動時段、混合模式；固定／混合可自訂更期名稱與時間。
-- 午膳時段及個別午膳在更表以紅色顯示。
-
-
-## v1.5 義工管理更新
-
-- 義工管理支援勾選及批量刪除，並同步移除相關班次及個別午膳資料。
-- 可按中心、組別、可服務模式篩選，並可切換一般列表／按中心／按組別分組顯示。
-- 義工資料取消電郵欄，新增緊急聯絡人、關係及電話。
-- 義工可服務模式支援固定時段、浮動時段及混合模式；Excel/CSV 匯入範本亦支援固定更期名稱及浮動開始／結束時間。
-- 可將目前篩選後的義工名單輸出成 Excel 相容 `.xls`。
+> Supabase JavaScript SDK 以固定版本 CDN 載入，因此預覽及正式使用時需要網絡連線。
