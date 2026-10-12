@@ -711,7 +711,17 @@ function openImportModal(){
     const status=modal.querySelector('#importStatus'),preview=modal.querySelector('#importPreview');
     status.innerHTML=`<p class="file-name">正在讀取：${esc(file.name)}…</p>`;preview.innerHTML='';
     try{
-      const rows=await readSpreadsheet(file);
+      // 直接按檔案類型讀取，避免舊版瀏覽器快取造成 readSpreadsheet 未載入。
+      // 保留 readSpreadsheet() 作共用 helper，但匯入流程本身不再依賴其全域/模組名稱。
+      const fileName=String(file?.name||'').toLowerCase();
+      let rows;
+      if(fileName.endsWith('.csv')||file?.type==='text/csv'){
+        rows=parseCSV(await file.text());
+      }else if(fileName.endsWith('.xlsx')||file?.type==='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        rows=await parseXLSX(await file.arrayBuffer());
+      }else{
+        throw new Error('只支援 .xlsx 或 .csv 檔案。');
+      }
       parsed=convertVolunteers(rows);
       if(!parsed.length)throw new Error('找不到「姓名」欄位或沒有可匯入資料。其他欄位可以留空。');
       const duplicates=getImportDuplicateInfo(parsed),duplicateKeys=new Set(duplicates.map(d=>d.key));
